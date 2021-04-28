@@ -13,11 +13,8 @@ let Y_PRESSED = false;
 let Z_PRESSED = false;
 let ARROW_KEY_PRESSED = false;
 
-function settings() {
-    createCanvas(WIDTH, HEIGHT, P3D);
-}
-
 function setup() {
+    createCanvas(WIDTH, HEIGHT, P3D);
     // createCanvas(600, 600, P3D);
     background(backgroundColor);
     surface.setTitle("Generative Crochet");
@@ -32,11 +29,10 @@ function setup() {
         // should not be the case at setup, unless an example were to be shown
     }
 
-    createGUI();
-    if (DEBUG) {
-        createDebugGUI();
-    }
-
+    // createGUI();
+    // if (DEBUG) {
+    //     createDebugGUI();
+    // }
 }
 
 function draw() {
