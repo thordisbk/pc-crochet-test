@@ -1,9 +1,9 @@
-# Thesis - MSc in Games (Technology Track)
+# PC crochet - test
+
+Thesis - MSc in Games (Technology Track)
 
 Spring semester of 2021
 
 IT-University of Copenhagen
 
-## About
-
-First version is written in Processing
+Processing and p5.js

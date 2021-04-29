@@ -6,7 +6,7 @@ class Pattern {
     // boolean condenseStitches = true;
     // boolean checkForIncreases = true;
 
-    Pattern(cs) {
+    constructor(cs) {
         this.condenseStitches = true;
         this.checkForIncreases = true;
 
@@ -15,7 +15,7 @@ class Pattern {
         this.patternStr = "Pattern:\n";
         let rowCounter = 0;
         for (let r = 0; r < cs.rows.length; r++) {
-            let row = row[r];
+            let row = cs.rows[r];
             let rowString = "";
             let rowStringList = [];
             if (this.condenseStitches && !this.checkForIncreases) {
@@ -56,20 +56,20 @@ class Pattern {
                         let elem = "";
                         if (incNums == 2) elem = stitch.stitchType + "-INC";
                         else elem = "do " + incNums + " " + currType + " in next stitch";
-                        array.push(rowStringList, elem);
+                        rowStringList.push(elem);
                     } else if (currDesc == StitchDescription.DEC && stitch.ontoStitch != null) {
                         let decNums = stitch.ontoStitches.length + 1;
 
                         let elem = "";
                         if (decNums == 2) elem = stitch.stitchType + "-DEC";
                         else elem = "stitch next " + decNums + " " + currType + " stitches together";
-                        array.push(rowStringList, elem);
+                        rowStringList.push(elem);
                     } else if (currDesc == StitchDescription.START && stitch.ontoStitch != null) {
                         let elem = "" + stitch.stitchType;
-                        array.push(rowStringList, elem);
+                        rowStringList.push(elem);
                     } else {  // if (currDesc == StitchDescription.REGULAR)
                         let elem = "" + stitch.stitchType;
-                        array.push(rowStringList, elem);
+                        rowStringList.push(elem);
                     }
 
                     // add a comma or a TURN to the rowString
@@ -90,13 +90,13 @@ class Pattern {
                         rowString += ", ";
 
                     let elem = "" + row.stitches[i].stitchType;
-                    array.push(rowStringList, elem);
+                    rowStringList.push(elem);
                 }
             }
 
             // use the list of row strings to create a row string, look for patterns
             if (rowStringList.length > 0) {
-                let res = ListToString(rowStringList);
+                let res = this.ListToString(rowStringList);
                 this.patternStr += "Row " + rowCounter +  ": " + res + " (" + row.count + ")\n";
             }
             else {
@@ -118,7 +118,7 @@ class Pattern {
             let currStr = "" + rowStringList[i];
             let sameCounter = 0;
             // check if the current repeats
-            while (i+1 < rowStringList.length && currStr.equals(rowStringList[i+1])) {
+            while (i+1 < rowStringList.length && currStr === rowStringList[i+1]) {
                 sameCounter++;
                 i++;
             }
@@ -131,7 +131,7 @@ class Pattern {
                 while (j < rowStringList.length && j+1 < rowStringList.length) {
                     let thirdStr = "" + rowStringList[j];
                     let fourthStr = "" + rowStringList[j+1];
-                    if (currStr.equals(thirdStr) && nextStr.equals(fourthStr)) {
+                    if (currStr === thirdStr && nextStr === fourthStr) {
                         sameTwoCounter++;
                         j += 2;
                         i += 2;

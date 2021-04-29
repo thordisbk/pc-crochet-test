@@ -8,13 +8,15 @@ const WIDTH = 800;
 const HEIGHT = 600;
 
 // 'true' prints additional information
-const VERBOSE = true;
-// final boolean VERBOSE = false;
+// const VERBOSE = true;
+const VERBOSE = false;
 
 // 'true' shows the debug GUI
 const DEBUG = true;
 // debug colors for vertices and stitches
 const useVertexStitchColors = true;
+
+const MAX_TESTS = 13;
 
 // in CrochetStructure, for visualization purposes; how far to position vertices from each other TODO add movable perspective
 let stitchLengthMultiplier = 30;
@@ -39,12 +41,13 @@ const backgroundColor = 230;  // 50;
 
 // let errorMargin = 0.0000001
 
-let YARN_WEIGHTS = [ "lace", "super fine", "fine", "light", "medium", "bulky", "super bulky", "jumbo" ];
-let HOOK_SIZES = [ "2.0 mm", "2.25 mm", "2.5 mm", "2.75 mm", "3.0 mm", "3.25 mm", "3.5 mm", "3.75 mm", "4.0 mm", 
+const YARN_WEIGHTS = [ "lace", "super fine", "fine", "light", "medium", "bulky", "super bulky", "jumbo" ];
+const HOOK_SIZES = [ "2.0 mm", "2.25 mm", "2.5 mm", "2.75 mm", "3.0 mm", "3.25 mm", "3.5 mm", "3.75 mm", "4.0 mm", 
                         "4.25 mm", "4.5 mm", "5.0 mm", "5.5 mm", "6.0 mm", "6.5 mm", "7.0 mm", "7.5 mm", "8.0 mm", 
                         "9.0 mm", "10 mm", "12 mm", "15 mm", "16 mm", "19 mm", "25 mm", "35 mm" ];
-let STITCH_TYPES = [ "SC", "HDC", "DC", "TR" ];
+const STITCH_TYPES = [ "SC", "HDC", "DC", "TR" ];
 
+//
 
 const StitchTypes = {
     CH: 'chain',
@@ -74,3 +77,14 @@ const CrochetType = {
     CIRCULAR: '',
     BACKFORTH: ''
 }
+
+const YarnWeight = { 
+    LACE: "lace", 
+    SUPERFINE: "super fine", 
+    FINE: "fine", 
+    LIGHT: "light", 
+    MEDIUM: "medium", 
+    BULKY: "bulky", 
+    SUPERBULKY: "super bulky", 
+    JUMBO: "jumbo" 
+};

@@ -30,7 +30,7 @@ class CrochetStructure {
     // let showVisualPoints = false;
     // let visualPoints = [];
 
-    CrochetStructure(ct, hs, yw) {
+    constructor(ct, hs, yw) {
         this.crochetType = ct;
         this.hookSize = hs;
         this.yarnWeight = yw;
@@ -38,20 +38,23 @@ class CrochetStructure {
         this.tensionLength = 1.0;
         this.tensionWidth = 1.0;
 
-        this.useOriginStitchForCentering = true;  
-        this.usingTest = false;     
-        this.showVisualPoints = false;     
-        this.visualPoints = [];
+        this.InitializeVars();
+        console.log("CS setup w/standard");
     }
 
-    CrochetStructure(ct, wid10x10, len10x10) {
-        // wid10x10 and len10x10 are given in cm
-        this.crochetType = ct;
-        this.hookSize = 0.0;
-        this.yarnWeight = null;
-        this.tensionLength = len10x10 / 10.0;
-        this.tensionWidth = wid10x10 / 10.0;
+    // CrochetStructure(ct, wid10x10, len10x10) {
+    //     // wid10x10 and len10x10 are given in cm
+    //     this.crochetType = ct;
+    //     this.hookSize = 0.0;
+    //     this.yarnWeight = null;
+    //     this.tensionLength = len10x10 / 10.0;
+    //     this.tensionWidth = wid10x10 / 10.0;
 
+    //     this.InitializeVars();
+    //     console.log("CS setup w/gauge");
+    // }
+
+    InitializeVars() {
         // FIXME
         stitchWidthMultiplier = 30 * this.tensionWidth;
         stitchLengthMultiplier = 30 * this.tensionLength;    
@@ -60,6 +63,10 @@ class CrochetStructure {
         this.usingTest = false; 
         this.showVisualPoints = false;     
         this.visualPoints = [];
+
+        this.rows = [];
+        this.allSprings = [];
+        this.allNodes = [];
     }
 
     CheckNodeSelection() {
@@ -108,7 +115,7 @@ class CrochetStructure {
             this.allSprings[s].update();
         }
         // make sure only one Node is pressed
-        CheckNodeSelection();
+        this.CheckNodeSelection();
         // DetectNodeCollisions();
 
         // then draw
@@ -160,17 +167,17 @@ class CrochetStructure {
         // translate(-WIDTH/2, -HEIGHT/2, 0);  // not with JS
     }
 
-    PressNodes() {
-        for (let n = 0; n < this.allNodes.length; n++) {
-            this.allNodes[n].pressed();
-        }
-    }
+    // PressNodes() {
+    //     for (let n = 0; n < this.allNodes.length; n++) {
+    //         this.allNodes[n].pressed();
+    //     }
+    // }
 
-    ReleaseNodes() {
-        for (let n = 0; n < this.allNodes.length; n++) {
-            this.allNodes[n].released();
-        }
-    }
+    // ReleaseNodes() {
+    //     for (let n = 0; n < this.allNodes.length; n++) {
+    //         this.allNodes[n].released();
+    //     }
+    // }
 
     Generate() {
         // call GenerateRestrained with no restralets
@@ -185,7 +192,7 @@ class CrochetStructure {
         let canBeCirc = true; 
         let canBeBAF = true;
 
-        return GenerateRestrained(minRows, maxRows, minStitches, maxStitches, numStitchesFirstRow, canBeCirc, canBeBAF, sameStitch, sType);
+        return this.GenerateRestrained(minRows, maxRows, minStitches, maxStitches, numStitchesFirstRow, canBeCirc, canBeBAF, sameStitch, sType);
     }
 
     GenerateRestrained(minRows, maxRows, minStitches, maxStitches, numStitchesFirstRow, canBeCirc, canBeBAF, allSameStitch, stitchType) {
@@ -203,9 +210,9 @@ class CrochetStructure {
         if (maxRows < minRows) maxRows = minRows;
         if (minRows < 1) minRows = 1;
         if (maxRows < 1 || maxRows == MAX_let || maxRows > 50) maxRows = 50;  // FIXME
-        let numOfRows = let(random(minRows, maxRows));
+        let numOfRows = random(minRows, maxRows);
 
-        if (numStitchesFirstRow < 1 || numStitchesFirstRow > 10) numStitchesFirstRow = let(random(4, 10));
+        if (numStitchesFirstRow < 1 || numStitchesFirstRow > 10) numStitchesFirstRow = random(4, 10);
 
         if (minStitches < numStitchesFirstRow) minStitches = numStitchesFirstRow;
         if (maxStitches < minStitches) maxStitches = minStitches;
@@ -213,7 +220,7 @@ class CrochetStructure {
         if (maxStitches < 1 || maxStitches == MAX_let || maxStitches > 300) maxStitches = 300;  // FIXME
 
         if (canBeCirc && canBeBAF) {  // TODO remove this and implement if (canBeCirc && canBeBAF) below
-            let rand = let(random(0, 2)); 
+            let rand = random(0, 2); 
             if (rand == 0) canBeBAF = false;
             else canBeCirc = false;
         }
@@ -230,14 +237,14 @@ class CrochetStructure {
             let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, this.firstStitch, null);
             let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
             let firstRowStitches = [this.firstStitch, stitch_ch1, stitch_ch2];
-            array.push(this.rows, new Row(firstRowStitches, this.crochetType));
+            this.rows.push(new Row(firstRowStitches, this.crochetType));
             
             // second row: choose random start stitches
             let currType = GetRandomStitchType();  // FIXME
             if (allSameStitch) currType = stitchType;
             let secondRowStitches = [];
             secondRowStitches = InitStitchIncNum(secondRowStitches, stitch_ch2, stitch_ch1, currType, numStitchesFirstRow);
-            array.push(this.rows, new Row(secondRowStitches, this.crochetType));
+            this.rows.push(new Row(secondRowStitches, this.crochetType));
             
             // consecutive rows
             let prevStitch = secondRowStitches[secondRowStitches.length-1];
@@ -266,7 +273,7 @@ class CrochetStructure {
                     ontoStitch = ontoStitch.nextStitch;
                 }
                 stitchesInPrevRow = stitchesInCurrRow;
-                array.push(this.rows, new Row(currRowStitches, this.crochetType));
+                this.rows.push(new Row(currRowStitches, this.crochetType));
             }
         } else if (!canBeCirc && canBeBAF) {
             this.crochetType = CrochetType.BACKFORTH;
@@ -280,7 +287,7 @@ class CrochetStructure {
                 firstRowStitches = InitStitchSingle(firstRowStitches, prevStitch, null, StitchTypes.CH);
                 prevStitch = firstRowStitches[firstRowStitches.length-1];
             }
-            array.push(this.rows, new Row(firstRowStitches, this.crochetType));
+            this.rows.push(new Row(firstRowStitches, this.crochetType));
 
             // consecutive rows: start with CH 2, then turn
             let stitchesInPrevRow = numStitchesFirstRow;
@@ -319,7 +326,7 @@ class CrochetStructure {
                     ontoStitch = ontoStitch.prevStitch;
                 }
                 stitchesInPrevRow = stitchesInCurrRow;
-                array.push(this.rows, new Row(currRowStitches, this.crochetType));
+                this.rows.push(new Row(currRowStitches, this.crochetType));
             }
 
         } else if (canBeCirc && canBeBAF) {
@@ -330,7 +337,7 @@ class CrochetStructure {
             return false;
         }
 
-        PositionStitches();
+        this.PositionStitches();
         return true;
     }
 
@@ -382,7 +389,7 @@ class CrochetStructure {
             this.csName = "back & forth WITH decrease";
         }
 
-        PositionStitches();
+        this.PositionStitches();
     }
 
     PositionStitches() {
@@ -391,9 +398,9 @@ class CrochetStructure {
             let row = this.rows[r];
             for (let s = 0; s < row.count; s++) {
                 let stitch = row.stitches[s];
-                array.push(this.allNodes, stitch.node);
+                this.allNodes.push(stitch.node);
                 for (let sp = 0; sp < stitch.springs.length; sp++) {
-                    array.push(this.allSprings, stitch.springs[sp]);
+                    this.allSprings.push(stitch.springs[sp]);
                 }
             }
         }
@@ -403,8 +410,8 @@ class CrochetStructure {
             this.totalStitches += this.rows[r].count;
         }
 
-        if (this.crochetType == CrochetType.CIRCULAR) ApplyTension();
-        else PositionOneStitchThenActivateSprings();
+        if (this.crochetType == CrochetType.CIRCULAR) this.ApplyTension();
+        else this.PositionOneStitchThenActivateSprings();
         // PositionOneStitchThenActivateSprings();
 
         // // TODO create one row at a time and fix position+tension on each row
@@ -448,7 +455,7 @@ class CrochetStructure {
                     tmp_o.mult(stitch.length * stitchLengthMultiplier);
                     p5.Vector.add(ontoStitch.GetPosition(), tmp_o, tmp_o);
                     // tmp_o.add(ontoStitch.GetPosition());
-                    array.push(this.visualPoints, tmp_o);  // white
+                    this.visualPoints.push(tmp_o);  // white
 
                     // let tmp_p = p5.Vector.mult(prevStitch.forwardVector, stitch.width * stitchWidthMultiplier);
                     // // tmp_p = p5.Vector.add(tmp_o, tmp_p);
@@ -457,7 +464,7 @@ class CrochetStructure {
                     tmp_p.mult(stitch.width * stitchWidthMultiplier);
                     // tmp_p.add(prevStitch.GetPosition());
                     p5.Vector.add(prevStitch.GetPosition(), tmp_p, tmp_p);
-                    array.push(this.visualPoints, tmp_p);  // black
+                    this.visualPoints.push(tmp_p);  // black
 
                     pos = tmp_o;
                     // pos = p5.Vector.lerp(tmp_o, tmp_p, 0.5);
@@ -500,7 +507,7 @@ class CrochetStructure {
                 stitch.SetPosition(pos);
 
                 // update springs of structure (up to and including current stitch) while still finding a relaxed state
-                UpdatePreviousStitches(r, s, 1000, false);
+                this.UpdatePreviousStitches(r, s, 1000, false);
 
                 // if (stitch.ontoStitch != null) stitch.ontoStitch.RecalculateVectors();
                 stitch.RecalculateVectors();
@@ -508,7 +515,7 @@ class CrochetStructure {
             }
         }
         // update all including newest
-        UpdatePreviousStitches(this.rows.length-1, this.rows[this.rows.length-1].count-1, 1000, true);
+        this.UpdatePreviousStitches(this.rows.length-1, this.rows[this.rows.length-1].count-1, 1000, true);
     }
 
     UpdatePreviousStitches(r, s, n, includeCurrent) {
@@ -657,7 +664,7 @@ class CrochetStructure {
 
                     // get Z coord of stitch, using pythagoras
                     let zPlus = sqrt((currStitchLength * currStitchLength) - (newStitchLen * newStitchLen)) * stitchLengthMultiplier;
-                    if (let.isNaN(zPlus)) zPlus = 0;  // FIXME added because of NaN of DEC stitches
+                    if (Number.isNaN(zPlus)) zPlus = 0;  // FIXME added because of NaN of DEC stitches
                     if (stitch.ontoStitch != null) zPlus += stitch.ontoStitch.GetPosition().z;
                     // console.log("- zPlus = " + zPlus);
 
@@ -833,7 +840,7 @@ class CrochetStructure {
             if (r < 2) continue;
 
             let prevRow = this.rows[r-1];
-            PositionChildStitches(prevRow, row);
+            this.PositionChildStitches(prevRow, row);
             
             NormalizeStitchesInCircularRow(row);
             row.FixVectorsInRow();

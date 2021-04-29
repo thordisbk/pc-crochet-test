@@ -1,22 +1,14 @@
+
 // for testing crochet structures and stitches
-
-// variables
-
-const MAX_TESTS = 13;
-
-let structures = [];
-let activeTestIdx = 8;
-
-// functions
 
 function createTests() {
     let circs = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
-    // let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    let active = [0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0];
+    let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    // let active = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < MAX_TESTS; i++) {
         let type = (circs[i] == 1) ? CrochetType.CIRCULAR : CrochetType.BACKFORTH;
         let crochetStructure = new CrochetStructure(type, 5.5, YarnWeight.MEDIUM);
-        array.push(structures, crochetStructure);
+        structures.push(crochetStructure);
 
         if (active[i] == 0) 
             continue;
@@ -25,6 +17,8 @@ function createTests() {
         let pattern = new Pattern(crochetStructure);
         console.log("\n" + pattern.patternStr + "\n");
     }
+    console.log("tests created");
+    console.log(structures);
 }
 
 function NextTest() {
@@ -82,14 +76,14 @@ function displayTest() {
     structures[activeTestIdx].Draw();
 }
 
-function handleMouseActionTest(release) {
-    if (!release) {
-        structures[activeTestIdx].PressNodes();
-    }
-    else {
-        structures[activeTestIdx].ReleaseNodes();
-    }
-}
+// function handleMouseActionTest(release) {
+//     if (!release) {
+//         structures[activeTestIdx].PressNodes();
+//     }
+//     else {
+//         structures[activeTestIdx].ReleaseNodes();
+//     }
+// }
 
 function handleKeyPressTest() {
     // change active test by clicking 'n'
@@ -107,7 +101,7 @@ function SetupCircleSC(firstStitch) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // second row
     let stitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch_ch2, stitch_ch1);
@@ -119,7 +113,7 @@ function SetupCircleSC(firstStitch) {
     let stitch8 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch7, stitch_ch1);
     let stitch9 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch8, stitch_ch1);
     let secondRowStitches = [stitch2, stitch3, stitch4, stitch5, stitch6, stitch7, stitch8, stitch9];
-    array.push(rows, new Row(secondRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(secondRowStitches, CrochetType.CIRCULAR));
 
     // third row
     let stitch10 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch9, stitch2);
@@ -140,7 +134,7 @@ function SetupCircleSC(firstStitch) {
     let stitch25 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch24, stitch9);
     let thirdRowStitches = [stitch10, stitch11, stitch12, stitch13, stitch14, stitch15, stitch16, stitch17,
                                  stitch18, stitch19, stitch20, stitch21, stitch22, stitch23, stitch24, stitch25];
-    array.push(rows, new Row(thirdRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(thirdRowStitches, CrochetType.CIRCULAR));
 
     return rows;
 }
@@ -159,19 +153,19 @@ function SetupFlatCircle(firstStitch, numStitchesInFirstRow, numOfRows, type) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
     rowCount++;
 
     let secondRowStitches = [];
     secondRowStitches = InitStitchIncNum(secondRowStitches, stitch_ch2, stitch_ch1, type, numStitchesInFirstRow);
-    array.push(rows, new Row(secondRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(secondRowStitches, CrochetType.CIRCULAR));
     rowCount++;
 
     for (; rowCount < numOfRows; rowCount++) {
         console.log("create row: " + rowCount);
         let numStitchesInCurrRow = numStitchesInFirstRow * (rowCount-1);  // should increase by 
         let currRowStitches = [];
-        // currRowStitches = new Stitch[0];
+        // currRowStitches = [];
         let lastRow = rows[rows.length-1];
         let prevStitch = lastRow.stitches[lastRow.count-1];
         let ontoStitch = lastRow.stitches[0];
@@ -186,7 +180,7 @@ function SetupFlatCircle(firstStitch, numStitchesInFirstRow, numOfRows, type) {
             prevStitch = currRowStitches[currRowStitches.length-1];
             ontoStitch = ontoStitch.nextStitch;
         }
-        array.push(rows, new Row(currRowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(currRowStitches, CrochetType.CIRCULAR));
     }
     return rows;
 }
@@ -198,7 +192,7 @@ function SetupCircleDiff(firstStitch) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // second row
     let stitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch_ch2, stitch_ch1);
@@ -210,7 +204,7 @@ function SetupCircleDiff(firstStitch) {
     let stitch8 = new Stitch(StitchTypes.TR, StitchDescription.INC, stitch7, stitch_ch1);
     let stitch9 = new Stitch(StitchTypes.HDC, StitchDescription.INC, stitch8, stitch_ch1);
     let secondRowStitches = [stitch2, stitch3, stitch4, stitch5, stitch6, stitch7, stitch8, stitch9];
-    array.push(rows, new Row(secondRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(secondRowStitches, CrochetType.CIRCULAR));
 
     // third row
     let stitch10 = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, stitch9, stitch2);
@@ -223,7 +217,7 @@ function SetupCircleDiff(firstStitch) {
     let stitch17 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch16, stitch9);
     let stitch18 = new Stitch(StitchTypes.SC, StitchDescription.INC, stitch17, stitch9);
     let thirdRowStitches = [stitch10, stitch11, stitch12, stitch13, stitch14, stitch15, stitch16, stitch17, stitch18];
-    array.push(rows, new Row(thirdRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(thirdRowStitches, CrochetType.CIRCULAR));
 
     return rows;
 }
@@ -239,7 +233,7 @@ function SetupCircleThatCups(firstStitch) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // second row
     let prevStitch = stitch_ch2;
@@ -251,7 +245,7 @@ function SetupCircleThatCups(firstStitch) {
             // first row
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                array.push(rowStitches, currStitch);
+                rowStitches.push(currStitch);
                 prevStitch = currStitch;
             }
         }
@@ -262,8 +256,8 @@ function SetupCircleThatCups(firstStitch) {
                 ontoStitch = rows[r].stitches[s];  // ontoStitch.prevStitch;
                 let currStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
                 let currStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, currStitch1, ontoStitch);
-                array.push(rowStitches, currStitch1);
-                array.push(rowStitches, currStitch2);
+                rowStitches.push(currStitch1);
+                rowStitches.push(currStitch2);
                 prevStitch = currStitch2;
             }
             turns++;
@@ -274,11 +268,11 @@ function SetupCircleThatCups(firstStitch) {
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 ontoStitch = rows[r].stitches[s];  // ontoStitch.prevStitch;
                 let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                array.push(rowStitches, currStitch);
+                rowStitches.push(currStitch);
                 prevStitch = currStitch;
             }
         }
-        array.push(rows, new Row(rowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(rowStitches, CrochetType.CIRCULAR));
     }
 
     return rows;
@@ -295,7 +289,7 @@ function SetupCircleThatCupsRandomIncs(firstStitch) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // second row
     let prevStitch = stitch_ch2;
@@ -307,32 +301,32 @@ function SetupCircleThatCupsRandomIncs(firstStitch) {
             // first row
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                array.push(rowStitches, currStitch);
+                rowStitches.push(currStitch);
                 prevStitch = currStitch;
             }
         }
         else {
             // one stitch for each ontoStitch
-            let rand = let(random(0, numOfStitchesInRow));
+            let rand = random(0, numOfStitchesInRow);
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 if (s == rand) {
                     ontoStitch = rows[r].stitches[s];
                     let currStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
                     let currStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, currStitch1, ontoStitch);
-                    array.push(rowStitches, currStitch1);
-                    array.push(rowStitches, currStitch2);
+                    rowStitches.push(currStitch1);
+                    rowStitches.push(currStitch2);
                     prevStitch = currStitch2;
                 }
                 else {
                     ontoStitch = rows[r].stitches[s];
                     let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                    array.push(rowStitches, currStitch);
+                    rowStitches.push(currStitch);
                     prevStitch = currStitch;
                 }
             }
             numOfStitchesInRow++;
         }
-        array.push(rows, new Row(rowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(rowStitches, CrochetType.CIRCULAR));
     }
 
     return rows;
@@ -349,7 +343,7 @@ function SetupHat(firstStitch) {
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // second row
     let prevStitch = stitch_ch2;
@@ -360,7 +354,7 @@ function SetupHat(firstStitch) {
             // first row, numOfStitchesInRow stitches in first stitch
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                array.push(rowStitches, currStitch);
+                rowStitches.push(currStitch);
                 prevStitch = currStitch;
             }
         }
@@ -370,8 +364,8 @@ function SetupHat(firstStitch) {
                 ontoStitch = rows[r].stitches[s];  // ontoStitch.prevStitch;
                 let currStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
                 let currStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, currStitch1, ontoStitch);
-                array.push(rowStitches, currStitch1);
-                array.push(rowStitches, currStitch2);
+                rowStitches.push(currStitch1);
+                rowStitches.push(currStitch2);
                 prevStitch = currStitch2;
             }
             numOfStitchesInRow += numOfStitchesInRow;
@@ -384,14 +378,14 @@ function SetupHat(firstStitch) {
                 if (s % 2 == 0) {
                     let currStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
                     let currStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, currStitch1, ontoStitch);
-                    array.push(rowStitches, currStitch1);
-                    array.push(rowStitches, currStitch2);
+                    rowStitches.push(currStitch1);
+                    rowStitches.push(currStitch2);
                     prevStitch = currStitch2;
                     newStitches++;
                 }
                 else {
                     let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                    array.push(rowStitches, currStitch);
+                    rowStitches.push(currStitch);
                     prevStitch = currStitch;
                 }
             }
@@ -401,23 +395,14 @@ function SetupHat(firstStitch) {
             // one stitch for each ontoStitch, except in first stitch
             let newStitches = 0;
             for (let s = 0; s < numOfStitchesInRow; s++) {
-                /*if (s == 0) {  // (s == 0) {
-                    ontoStitch = rows[r].stitches[s];
-                    let currStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
-                    let currStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, currStitch1, ontoStitch);
-                    array.push(rowStitches, currStitch1);
-                    array.push(rowStitches, currStitch2);
-                    prevStitch = currStitch2;
-                    newStitches++;
-                }*/
                 ontoStitch = rows[r].stitches[s];
                 let currStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
-                array.push(rowStitches, currStitch);
+                rowStitches.push(currStitch);
                 prevStitch = currStitch;
             }
             numOfStitchesInRow += newStitches;
         }
-        array.push(rows, new Row(rowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(rowStitches, CrochetType.CIRCULAR));
     }
 
     return rows;
@@ -432,13 +417,13 @@ function SetupCirclePI(firstStitch) {
 
     // zero-th row, just chain
     // let zeroRowStitches = [firstStitch];
-    // array.push(rows, new Row(zeroRowStitches, CrochetType.CIRCULAR));
+    // rows.push(new Row(zeroRowStitches, CrochetType.CIRCULAR));
     
     // first row
     let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, firstStitch, null);
     let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
     let firstRowStitches = [firstStitch, stitch_ch1, stitch_ch2];
-    array.push(rows, new Row(firstRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(firstRowStitches, CrochetType.CIRCULAR));
 
     // first row INC
     let currRowStitches = [];
@@ -447,16 +432,16 @@ function SetupCirclePI(firstStitch) {
     for (let i = 0; i < numStitchesInFirstRow; i++) {
         let newStitch = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
         prevStitch = newStitch;
-        array.push(currRowStitches, newStitch);
+        currRowStitches.push(newStitch);
     }
 
-    array.push(rows, new Row(currRowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(currRowStitches, CrochetType.CIRCULAR));
     numStitchesLastRow = currRowStitches.length;
     let prevRowStitches = currRowStitches;
 
     for (let n = 2; n <= numOfRows; n++) {
         // if n is a power of 2, then this is an increase row; else, this is a non-increase row
-        currRowStitches = new Stitch[0];
+        currRowStitches = [];
         prevStitch = prevRowStitches[prevRowStitches.length-1];
         if (IsAPowerOfTwo(n)) {
             for (let i = 0; i < numStitchesLastRow; i++) {
@@ -464,8 +449,8 @@ function SetupCirclePI(firstStitch) {
                 let newStitch1 = new Stitch(StitchTypes.SC, StitchDescription.INC, prevStitch, ontoStitch);
                 let newStitch2 = new Stitch(StitchTypes.SC, StitchDescription.INC, newStitch1, ontoStitch);
                 prevStitch = newStitch2;
-                array.push(currRowStitches, newStitch1);
-                array.push(currRowStitches, newStitch2);
+                currRowStitches.push(newStitch1);
+                currRowStitches.push(newStitch2);
             }
         }
         else {
@@ -473,10 +458,10 @@ function SetupCirclePI(firstStitch) {
                 ontoStitch = prevRowStitches[i];
                 let newStitch1 = new Stitch(StitchTypes.SC, StitchDescription.REGULAR, prevStitch, ontoStitch);
                 prevStitch = newStitch1;
-                array.push(currRowStitches, newStitch1);
+                currRowStitches.push(newStitch1);
             }
         }
-        array.push(rows, new Row(currRowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(currRowStitches, CrochetType.CIRCULAR));
         numStitchesLastRow = currRowStitches.length;
         prevRowStitches = currRowStitches;
     }
@@ -503,19 +488,19 @@ function SetupBackAndForthSquare(firstStitch, stitchType, numOfRows, numStitches
     for (let i = 0; i < numStitchesInRows+1; i++) {
         let newStitch = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, prevStitch, ontoStitch);
         prevStitch = newStitch;
-        array.push(currRowStitches, newStitch);
+        currRowStitches.push(newStitch);
     }
-    array.push(rows, new Row(currRowStitches, CrochetType.BACKFORTH));
+    rows.push(new Row(currRowStitches, CrochetType.BACKFORTH));
     let prevRowStitches = currRowStitches;
 
     // DC ROW, ending with CH 2
     for (let i = 0; i < numOfRows; i++) {
         ontoStitch = prevStitch.prevStitch.prevStitch;  // because DC; take 3rd CH from hook
-        currRowStitches = new Stitch[0];
+        currRowStitches = [];
         for (let j = 0; j < numStitchesInRows; j++) {
             let newStitch = new Stitch(stitchType, StitchDescription.REGULAR, prevStitch, ontoStitch);
             prevStitch = newStitch;
-            array.push(currRowStitches, newStitch);
+            currRowStitches.push(newStitch);
             ontoStitch = ontoStitch.prevStitch;
         }
         ontoStitch = null;
@@ -523,10 +508,10 @@ function SetupBackAndForthSquare(firstStitch, stitchType, numOfRows, numStitches
             for (let j = 0; j < 2; j++) {
                 let newStitch = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, prevStitch, ontoStitch);
                 prevStitch = newStitch;
-                array.push(currRowStitches, newStitch);
+                currRowStitches.push(newStitch);
             }
         }
-        array.push(rows, new Row(currRowStitches, CrochetType.BACKFORTH));
+        rows.push(new Row(currRowStitches, CrochetType.BACKFORTH));
         prevRowStitches = currRowStitches;
     }
 
@@ -534,7 +519,7 @@ function SetupBackAndForthSquare(firstStitch, stitchType, numOfRows, numStitches
         let lastRow = rows[rows.length-1];
         prevStitch = lastRow.stitches[lastRow.count-1];
         ontoStitch = lastRow.stitches[lastRow.count-1];
-        currRowStitches = new Stitch[0];
+        currRowStitches = [];
 
         // first 2 CH
         currRowStitches = InitStitchSingle(currRowStitches, prevStitch, null, StitchTypes.CH);
@@ -553,13 +538,13 @@ function SetupBackAndForthSquare(firstStitch, stitchType, numOfRows, numStitches
             prevStitch = prevStitch.nextStitch;
             ontoStitch = ontoStitch.prevStitch;
         }
-        array.push(rows, new Row(currRowStitches, CrochetType.BACKFORTH));
+        rows.push(new Row(currRowStitches, CrochetType.BACKFORTH));
     }
     if (withDec) {
         let lastRow = rows[rows.length-1];
         prevStitch = lastRow.stitches[lastRow.count-1];
         ontoStitch = lastRow.stitches[lastRow.count-1];
-        currRowStitches = new Stitch[0];
+        currRowStitches = [];
 
         // first 2 CH
         currRowStitches = InitStitchSingle(currRowStitches, prevStitch, null, StitchTypes.CH);
@@ -580,7 +565,7 @@ function SetupBackAndForthSquare(firstStitch, stitchType, numOfRows, numStitches
             prevStitch = prevStitch.nextStitch;
             ontoStitch = ontoStitch.prevStitch;
         }
-        array.push(rows, new Row(currRowStitches, CrochetType.BACKFORTH));
+        rows.push(new Row(currRowStitches, CrochetType.BACKFORTH));
     }
 
     return rows;
@@ -614,7 +599,7 @@ function SetupCylindricalSpiral(firstStitch) {
                     currRowStitches = InitStitchSingle(currRowStitches, currRowStitches[currRowStitches.length-1], null, currType);
                 }
             }
-            array.push(rows, new Row(currRowStitches, cType));
+            rows.push(new Row(currRowStitches, cType));
         }
         else {  // then SC 1 into each CH
             let currType = StitchTypes.SC;
@@ -631,7 +616,7 @@ function SetupCylindricalSpiral(firstStitch) {
                 ontoStitch = ontoStitch.nextStitch;
                 prevStitch = prevStitch.nextStitch;
             }
-            array.push(rows, new Row(currRowStitches, cType));
+            rows.push(new Row(currRowStitches, cType));
         }
 
     } 
@@ -660,7 +645,7 @@ function SetupCylindrical(firstStitch) {
                 }
                 console.log("Init stitch " + currType + " | r = " + r);
             }
-            array.push(rows, new Row(currRowStitches, cType));
+            rows.push(new Row(currRowStitches, cType));
         }
         else {  // then SC 1 into each CH
             let currType = StitchTypes.SC;
@@ -688,7 +673,7 @@ function SetupCylindrical(firstStitch) {
                     ontoStitch = ontoStitch.nextStitch;
                 }
             }
-            array.push(rows, new Row(currRowStitches, cType));
+            rows.push(new Row(currRowStitches, cType));
         }
     } 
 
@@ -714,7 +699,7 @@ function SetupCircleWithDecreases(firstStitch) {
             rowStitches = InitStitchSingle(rowStitches, prev, lastRow.stitches[s], StitchTypes.SC);
             prev = rowStitches[rowStitches.length-1];
         }
-        array.push(rows, new Row(rowStitches, CrochetType.CIRCULAR));
+        rows.push(new Row(rowStitches, CrochetType.CIRCULAR));
         lastRow = rows[rows.length-1];
     }
 
@@ -726,7 +711,7 @@ function SetupCircleWithDecreases(firstStitch) {
         rowStitches = InitStitchDec(rowStitches, prev, onto1, onto2, StitchTypes.SC);
         prev = rowStitches[rowStitches.length-1];
     }
-    array.push(rows, new Row(rowStitches, CrochetType.CIRCULAR));
+    rows.push(new Row(rowStitches, CrochetType.CIRCULAR));
 
     return rows;
 }

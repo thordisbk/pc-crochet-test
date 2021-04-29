@@ -4,7 +4,7 @@ class Row {
     // let count = 0;
     // CrochetType crochetType;
 
-    Row(newStitches, ct) {
+    constructor(newStitches, ct) {
         this.stitches = newStitches;
         this.count = newStitches.length;
         this.crochetType = ct;
@@ -20,6 +20,7 @@ class Row {
         if (this.crochetType == CrochetType.CIRCULAR && (this.count > 1 && connectStartEndStitches)) {
             if (VERBOSE) console.log("Row::Row connect start stitch to last row's end stitch\n");
             let lastStitch = this.stitches[this.count - 1];
+            console.log("lastStitch = " + lastStitch);
             let firstStitch = this.stitches[0];
             if (VERBOSE) console.log("Row::Row lastStitch =", lastStitch.stitchType, " | firstStitch =", firstStitch.stitchType, "\n");
             // make a green edge/spring that connects the lastStitch to the firstStitch, but does no update like a spring
@@ -37,27 +38,27 @@ class Row {
             
             if (firstIsSLKN && restIsCH) {
                 if (firstStitch.nextStitch != null && firstStitch.nextStitch.node != lastStitch.node) {
-                    array.push(lastStitch.springs, new Spring(lastStitch.node, firstStitch.nextStitch.node, 
+                    lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.nextStitch.node, 
                                     lastStitch.width * stitchLengthMultiplier, defDamp, defSpringConstant, 
                                     createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
                 }
             } else {
                 // if not only CH, connect lastStitch to first stitch
-                array.push(lastStitch.springs, new Spring(lastStitch.node, firstStitch.node, 
+                lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.node, 
                                     lastStitch.width * stitchLengthMultiplier, defDamp, defSpringConstant, 
                                     createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
             }
 
 
-            // array.push(springs, new Spring(node, prevStitch.node, rest_dist_prev, defDamp, defSpringConstant));
+            // springs.push(new Spring(node, prevStitch.node, rest_dist_prev, defDamp, defSpringConstant));
         }
         /*else if (this.crochetType == CrochetType.BACKFORTH && (this.count > 1 && connectStartEndStitches && this.stitches[0].prevStitch != null)) {
             if (VERBOSE) console.log("Row::Row connect start stitch to last row's end stitch\n");
             Stitch firstStitchCurr = this.stitches[0];
             Stitch lastStitchPrev = firstStitchCurr.prevStitch;
             if (VERBOSE) console.log("Row::Row lastStitch =", lastStitchPrev.stitchType, " | firstStitch =", firstStitchCurr.stitchType, "\n");
-            // array.push(firstStitchCurr.edges, new Edge(lastStitchPrev.vertices[0], firstStitchCurr.vertices[0], false));
-            array.push(firstStitchCurr.edges, new Edge(lastStitchPrev.vertex0, firstStitchCurr.vertex0, false));
+            // firstStitchCurr.edges.push(new Edge(lastStitchPrev.vertices[0], firstStitchCurr.vertices[0], false));
+            firstStitchCurr.edges.push(new Edge(lastStitchPrev.vertex0, firstStitchCurr.vertex0, false));
         }*/
     }
 

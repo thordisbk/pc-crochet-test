@@ -69,13 +69,13 @@ function button_generate(GButton source, GEvent event) {
     console.log(("stitch type chosen: " + str_sType);
     // parse stitchType to enum
     StitchTypes sType = StitchTypes.SC;
-    if (str_sType.equals("SC")) {
+    if (str_sType === "SC") {
         sType = StitchTypes.SC;
-    } else if (str_sType.equals("HDC")) {
+    } else if (str_sType === "HDC") {
         sType = StitchTypes.HDC;
-    } else if (str_sType.equals("DC")) {
+    } else if (str_sType === "DC") {
         sType = StitchTypes.DC;
-    } else if (str_sType.equals("TR")) {
+    } else if (str_sType === "TR") {
         sType = StitchTypes.TR;
     } 
 
@@ -140,7 +140,7 @@ function button_export(GButton source, GEvent event) {
     }
 
     let filename = t_pdfname.getText().trim();
-    if (filename.equals("")) {
+    if (filename === "") {
         t_pdfname.setText("pattern");
         filename = "pattern";
         console.log(("Textfield empty! Set to: pattern.");

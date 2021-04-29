@@ -2,8 +2,8 @@
 // collection of currently used globals
 // TODO afunctionance
 
-let ROTATION = createVector(0.0, 0.0, 0.0);
-let ZOOM = 1.0;
+let ROTATION;
+let ZOOM;
 
 function ResetRotZoom() {
     // reset rotation and zoom
@@ -11,24 +11,54 @@ function ResetRotZoom() {
     ZOOM = 1.0;
 }
 
-let recordingPDF = false;
+let recordingPDF;
 // let pdf;  // enables use of nextPage function, but doesn't support raw 3D
 // let pdf_structure;  // supports 3D, but has no nextPage function
 
 // 'true' uses the tests from testcased.pde, set to false when a structure is generated via gui
-let useTests = true;
+let useTests;
 
-let generatedReady = false;
+let generatedReady;
 let generatedCrochetStructure;
 
-let colorIncrease = 0;
-
-let defMass = 10.0;
+let defMass;
 // Damping simulates energy loss, and it is used in physics simulations to make sure 
 //  that springs don’t oscillate forever but come to rest over time.
-let defDamp = 0.9;
+let defDamp;
 // k is a constant describing the tightness of the spring. 
 //  Larger values of k mean that the spring is tighter and will therefore stretch less per unit of force, 
 //  smaller values mean the spring is looser and will stretch further.
-let defSpringConstant = 0.05;
-let springColor = createVector(255, 0, 0);
+let defSpringConstant;
+let springColor;
+
+// keyboard, set to false
+let X_PRESSED;
+let Y_PRESSED;
+let Z_PRESSED;
+let ARROW_KEY_PRESSED;
+
+// for tests
+let structures;
+let activeTestIdx;
+
+function InitializeGlobals() {
+    console.log("Init globals");
+
+    ROTATION = createVector(0.0, 0.0, 0.0);
+    ZOOM = 1.0;
+    recordingPDF = false;
+    useTests = true;
+    generatedReady = false;
+    defMass = 10.0;
+    defDamp = 0.9;
+    defSpringConstant = 0.05;
+    springColor = createVector(255, 0, 0);
+
+    X_PRESSED = false;
+    Y_PRESSED = false;
+    Z_PRESSED = false;
+    ARROW_KEY_PRESSED = false;
+
+    structures = [];
+    activeTestIdx = 0;
+}

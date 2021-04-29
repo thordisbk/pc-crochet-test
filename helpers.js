@@ -48,7 +48,7 @@ function IsAPowerOfTwo(num) {
     if (num == 0)
         return false;
     let log2_num = log(num) / log(2);
-    return (let) (ceil(log2_num)) == (let) (floor(log2_num));
+    return ceil(log2_num) == floor(log2_num);
 }
 
 function ComputeStitchPosFromUpVector(stitch) {

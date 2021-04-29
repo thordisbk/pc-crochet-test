@@ -13,6 +13,13 @@ class Node {
 
     // let mass;  // mass of the node, for spring physics
 
+    constructor() {
+        if (arguments.length == 4) this.Node(arguments[0], arguments[1], arguments[2], arguments[3]);
+        else if (arguments.length == 5) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+        else if (arguments.length == 6) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+        else console.log("WARNING:Node() constructor received wrong number of arguments");
+    }
+
     // Constructor, main (rad, position, mass, color)
     Node(r, p, m, c) {
         this.pos = p;
@@ -40,36 +47,36 @@ class Node {
         this.colH = createVector(153, 153, 153);
     }
 
-    // Check if mouse is over this node
-    overEvent() {
-        // get position in screen coordinates
-        let pos2D = createVector(screenX(this.pos.x, this.pos.y, this.pos.z), screenY(this.pos.x, this.pos.y, this.pos.z), screenZ(this.pos.x, this.pos.y, this.pos.z));
-        // TODO apply rotation as well?
-        // compare mouse poleter position to screen coordinates of object
-        let dist = pos2D.dist(createVector(touchX, touchY, 0));
-        if (dist < this.radius) {
-            this.over = true;
-        } else {
-            this.over = false;
-        }
-        // console.log("over? dist = " + dist + "\n");
-    }
+    // // Check if mouse is over this node
+    // overEvent() {
+    //     // get position in screen coordinates
+    //     let pos2D = createVector(screenX(this.pos.x, this.pos.y, this.pos.z), screenY(this.pos.x, this.pos.y, this.pos.z), screenZ(this.pos.x, this.pos.y, this.pos.z));
+    //     // TODO apply rotation as well?
+    //     // compare mouse poleter position to screen coordinates of object
+    //     let dist = pos2D.dist(createVector(touchX, touchY, 0));
+    //     if (dist < this.radius) {
+    //         this.over = true;
+    //     } else {
+    //         this.over = false;
+    //     }
+    //     // console.log("over? dist = " + dist + "\n");
+    // }
     
-    // Called from touchStarted() to check if this is the node being clicked
-    pressed() {
-        if (this.over) {
-            this.move = true;
-        } else {
-            this.move = false;
-        }
-    }
+    // // Called from touchStarted() to check if this is the node being clicked
+    // pressed() {
+    //     if (this.over) {
+    //         this.move = true;
+    //     } else {
+    //         this.move = false;
+    //     }
+    // }
 
-    // Called from touchEnded() to release this node
-    released() {
-        this.move = false;
-    }
+    // // Called from touchEnded() to release this node
+    // released() {
+    //     this.move = false;
+    // }
 
-     pdate() {
+    update() {
         // TODO update() find 3D position correcsponding to these screen coordinates
         if (this.move) {
             // pos.set(touchX, touchY, pos.z);
@@ -134,7 +141,7 @@ class Spring {
     // boolean updatePositions = false;
 
     // Constructor
-    Spring(n1, n2, rd, d, k_const, c, notASpring) {
+    constructor(n1, n2, rd, d, k_const, c, notASpring) {
 
         this.bounceAtStart = false;
         this.strokeThickness = 3.0;
@@ -174,8 +181,8 @@ class Spring {
             updatePos(this.nodeB.pos, this.nodeA.pos, this.nodeB.mass);
         }
 
-        this.nodeA.overEvent();
-        this.nodeB.overEvent();
+        // this.nodeA.overEvent();
+        // this.nodeB.overEvent();
     }
 
     updatePos(pos1, pos2, mass) {
@@ -213,15 +220,15 @@ class Spring {
 
     Draw() {
 
-        let strokeWeight = this.rest_dist / this.nodeA.pos.dist(nodeB.pos);
+        let strokeW = this.rest_dist / this.nodeA.pos.dist(this.nodeB.pos);
 
         push();
         rotateX(radians(ROTATION.x));
         rotateY(radians(ROTATION.y));
         rotateZ(radians(ROTATION.z));
 
-        // strokeWeight(strokeWeight * strokeThickness);
-        strokeWeight(strokeWeight * strokeThickness * ZOOM);
+        // strokeWeight(strokeW * strokeThickness);
+        strokeWeight(strokeW * this.strokeThickness * ZOOM);
         stroke(this.col.x, this.col.y, this.col.z, 255);
         
         let zoomNodeA = p5.Vector.mult(this.nodeA.pos, ZOOM);
