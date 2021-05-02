@@ -30,7 +30,16 @@ class CrochetStructure {
     // let showVisualPoints = false;
     // let visualPoints = [];
 
-    constructor(ct, hs, yw) {
+
+    constructor(val1, val2, val3) {
+        if (isFloat(val2) && isFloat(val3))
+            this.CrochetStructure2(val1, val2, val3);
+        else
+            this.CrochetStructure1(val1, val2, val3);
+    }
+
+    CrochetStructure1(ct, hs, yw) {
+        // hs and yw are consts
         this.crochetType = ct;
         this.hookSize = hs;
         this.yarnWeight = yw;
@@ -39,20 +48,18 @@ class CrochetStructure {
         this.tensionWidth = 1.0;
 
         this.InitializeVars();
-        console.log("CS setup w/standard");
     }
 
-    // CrochetStructure(ct, wid10x10, len10x10) {
-    //     // wid10x10 and len10x10 are given in cm
-    //     this.crochetType = ct;
-    //     this.hookSize = 0.0;
-    //     this.yarnWeight = null;
-    //     this.tensionLength = len10x10 / 10.0;
-    //     this.tensionWidth = wid10x10 / 10.0;
+    CrochetStructure2(ct, wid10x10, len10x10) {
+        // wid10x10 and len10x10 are given in cm as floats
+        this.crochetType = ct;
+        this.hookSize = 0.0;
+        this.yarnWeight = null;
+        this.tensionLength = len10x10 / 10.0;
+        this.tensionWidth = wid10x10 / 10.0;
 
-    //     this.InitializeVars();
-    //     console.log("CS setup w/gauge");
-    // }
+        this.InitializeVars();
+    }
 
     InitializeVars() {
         // FIXME
@@ -210,9 +217,9 @@ class CrochetStructure {
         if (maxRows < minRows) maxRows = minRows;
         if (minRows < 1) minRows = 1;
         if (maxRows < 1 || maxRows == MAX_let || maxRows > 50) maxRows = 50;  // FIXME
-        let numOfRows = random(minRows, maxRows);
+        let numOfRows = int(random(minRows, maxRows));
 
-        if (numStitchesFirstRow < 1 || numStitchesFirstRow > 10) numStitchesFirstRow = random(4, 10);
+        if (numStitchesFirstRow < 1 || numStitchesFirstRow > 10) numStitchesFirstRow = int(random(4, 10));
 
         if (minStitches < numStitchesFirstRow) minStitches = numStitchesFirstRow;
         if (maxStitches < minStitches) maxStitches = minStitches;
@@ -220,7 +227,7 @@ class CrochetStructure {
         if (maxStitches < 1 || maxStitches == MAX_let || maxStitches > 300) maxStitches = 300;  // FIXME
 
         if (canBeCirc && canBeBAF) {  // TODO remove this and implement if (canBeCirc && canBeBAF) below
-            let rand = random(0, 2); 
+            let rand = int(random(0, 2)); 
             if (rand == 0) canBeBAF = false;
             else canBeCirc = false;
         }
@@ -257,7 +264,7 @@ class CrochetStructure {
                     currType = GetRandomStitchType();
                     if (allSameStitch) currType = stitchType;
 
-                    let prob = random(0, 1);
+                    let prob = int(random(0, 1));
                     if (prob > 0.8 && stitchesInCurrRow < maxStitches) {  // do and increase
                         currRowStitches = InitStitchInc(currRowStitches, prevStitch, ontoStitch, currType);
                         stitchesInCurrRow++;
@@ -310,7 +317,7 @@ class CrochetStructure {
                     let currType = GetRandomStitchType();
                     if (allSameStitch) currType = stitchType;
 
-                    let prob = random(0, 1);
+                    let prob = int(random(0, 1));
                     if (prob > 0.8 && stitchesInCurrRow < maxStitches) {  // do and increase
                         currRowStitches = InitStitchInc(currRowStitches, prevStitch, ontoStitch, currType);
                         stitchesInCurrRow++;
@@ -410,6 +417,7 @@ class CrochetStructure {
             this.totalStitches += this.rows[r].count;
         }
 
+        console.log("CrochetType = " + this.crochetType);
         if (this.crochetType == CrochetType.CIRCULAR) this.ApplyTension();
         else this.PositionOneStitchThenActivateSprings();
         // PositionOneStitchThenActivateSprings();
@@ -567,7 +575,7 @@ class CrochetStructure {
     }
 
     ApplyTension() {
-        let printStuff = true;
+        let printStuff = false;
         // change positions of stitches to accommodate the tension and number of stitches in a row
         let zAdd = 1.0 * stitchLengthMultiplier, zPrev = 0.0;
         let counter = 0;
@@ -1009,6 +1017,12 @@ class CrochetStructure {
         let rs_x = posFurthestXPos.dist(posFurthestXNeg) / stitchLengthMultiplier;
         let rs_y = posFurthestYPos.dist(posFurthestYNeg) / stitchLengthMultiplier;
         let rs_z = posFurthestZPos.dist(posFurthestZNeg) / stitchLengthMultiplier;
+
+        // make sure that numbers aren't negative or become 0.0
+        let minVal = 0.1;
+        if (rs_x < minVal) rs_x = minVal;
+        if (rs_y < minVal) rs_y = minVal;
+        if (rs_z < minVal) rs_z = minVal;
 
         return "~ " + nf(rs_x, 0, 1) + " x " + nf(rs_y, 0, 1) + " x " + nf(rs_z, 0, 1) + " cm";
     }

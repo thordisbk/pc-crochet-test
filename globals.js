@@ -1,9 +1,8 @@
 
-// collection of currently used globals
-// TODO afunctionance
+// global variable and functions to initialize/reset them
 
-let ROTATION;
-let ZOOM;
+var ROTATION;
+var ZOOM;
 
 function ResetRotZoom() {
     // reset rotation and zoom
@@ -11,9 +10,8 @@ function ResetRotZoom() {
     ZOOM = 1.0;
 }
 
-let recordingPDF;
-// let pdf;  // enables use of nextPage function, but doesn't support raw 3D
-// let pdf_structure;  // supports 3D, but has no nextPage function
+// canvas ref
+let cnv;
 
 // 'true' uses the tests from testcased.pde, set to false when a structure is generated via gui
 let useTests;
@@ -42,7 +40,6 @@ let structures;
 let activeTestIdx;
 
 function InitializeGlobals() {
-    console.log("Init globals");
 
     ROTATION = createVector(0.0, 0.0, 0.0);
     ZOOM = 1.0;

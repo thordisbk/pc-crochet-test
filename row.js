@@ -20,7 +20,7 @@ class Row {
         if (this.crochetType == CrochetType.CIRCULAR && (this.count > 1 && connectStartEndStitches)) {
             if (VERBOSE) console.log("Row::Row connect start stitch to last row's end stitch\n");
             let lastStitch = this.stitches[this.count - 1];
-            console.log("lastStitch = " + lastStitch);
+            // console.log("lastStitch = " + lastStitch);
             let firstStitch = this.stitches[0];
             if (VERBOSE) console.log("Row::Row lastStitch =", lastStitch.stitchType, " | firstStitch =", firstStitch.stitchType, "\n");
             // make a green edge/spring that connects the lastStitch to the firstStitch, but does no update like a spring

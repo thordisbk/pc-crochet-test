@@ -70,8 +70,56 @@ function isFloat(str) {
     return Number(str) === str && str % 1 !== 0;
 }
 
+function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
+    // let fileName = "generated_crochet";
+
+    noLoop();
+
+    let dateString = CreateDateString();
+    console.log("date string: " + dateString);
+
+    let patternString = "";
+    let approxRealSize = "? cm";
+    if (useTests) {
+        patternString = GetActiveTestPattern();
+        approxRealSize = GetActiveTestApproximateRealSize();
+    } else if (generatedReady) {
+        let pattern = new Pattern(generatedCrochetStructure);
+        patternString = pattern.patternStr;
+        approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    }
+    let formattedPattern = FormatPatternString(patternString);
+    let realSize = "Approximate real size of crocheted object: " + approxRealSize;
+    let creatorStr = "Created using Crochet Patthern Generator by ÞBK (pokr@itu.dk)";
+
+    // save an image of the crochet structure
+    save(cnv, fileName + "_image.png");
+
+    // save a PDF with the pattern
+    let doc = new jsPDF();
+    let xMargin = 15;
+
+    // title
+    doc.setFontSize(18);
+    doc.text("Generated Crochet Pattern", xMargin, 20);
+    
+    // info
+    doc.setFontSize(8);
+    doc.text(creatorStr, xMargin, 30);
+    doc.text(dateString, xMargin, 35);
+    doc.text(realSize, xMargin, 40);
+
+    // pattern
+    doc.setFontSize(12);
+    doc.text(formattedPattern, xMargin, 50);
+    
+    doc.save(fileName + "_pattern.pdf");
+
+    loop();
+}
+
 function GetRandomStitchType() {
-    let rand = random(0, 7); 
+    let rand = int(random(0, 7)); 
     if (rand == 0) return StitchTypes.CH;
     if (rand == 1) return StitchTypes.SC;
     if (rand == 2) return StitchTypes.HDC;
@@ -88,19 +136,23 @@ function CreateDateString() {
     // let dateStr = String.format("%f:%f:%f %f/%f/%f", hour(), minute(), second(), day(), month(), year()); 
     // let dateStr = hour() + ":" + minute() + ":" + second() + " " + day() + "/" + month() + "/" + year();
 
-    let hour = "" + hour();
-    if (hour.length() == 1) hour = "0" + hour;
-    let min = "" + minute();
-    if (min.length() == 1) min = "0" + min;
-    let sec = "" + second();
-    if (sec.length() == 1) sec = "0" + sec;
-    let day = "" + day();
-    if (day.length() == 1) day = "0" + day;
-    let mon = "" + month();
-    if (mon.length() == 1) mon = "0" + mon;
-    let year = "" + year();
+    let currentTime = new Date();
 
-    let dateStr = hour + ":" + min + ":" + sec + " " + day + "/" + mon + "/" + year;
+    let hour = "" + currentTime.getHours();
+    if (hour.length == 1) hour = "0" + hour;
+    let min = "" + currentTime.getMinutes();
+    if (min.length == 1) min = "0" + min;
+    let sec = "" + currentTime.getSeconds();
+    if (sec.length == 1) sec = "0" + sec;
+    let day = "" + currentTime.getDate();
+    if (day.length == 1) day = "0" + day;
+    let mon = "" + currentTime.getMonth();
+    if (mon.length == 1) mon = "0" + mon;
+    let year = "" + currentTime.getFullYear();
+    let weekDayIdx = currentTime.getDay();
+    let weekDay = WeekDays[weekDayIdx];
+
+    let dateStr = hour + ":" + min + ":" + sec + " " + weekDay + " " + day + "/" + mon + "/" + year;
     return dateStr;
 }
 

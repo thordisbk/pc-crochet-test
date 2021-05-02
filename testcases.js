@@ -3,8 +3,8 @@
 
 function createTests() {
     let circs = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
-    let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    // let active = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    // let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    let active = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < MAX_TESTS; i++) {
         let type = (circs[i] == 1) ? CrochetType.CIRCULAR : CrochetType.BACKFORTH;
         let crochetStructure = new CrochetStructure(type, 5.5, YarnWeight.MEDIUM);
@@ -307,7 +307,7 @@ function SetupCircleThatCupsRandomIncs(firstStitch) {
         }
         else {
             // one stitch for each ontoStitch
-            let rand = random(0, numOfStitchesInRow);
+            let rand = int(random(0, numOfStitchesInRow));
             for (let s = 0; s < numOfStitchesInRow; s++) {
                 if (s == rand) {
                     ontoStitch = rows[r].stitches[s];

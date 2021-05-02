@@ -177,8 +177,8 @@ class Spring {
     update() {
 
         if (this.isSpring && this.updatePositions) {
-            updatePos(this.nodeA.pos, this.nodeB.pos, this.nodeA.mass);
-            updatePos(this.nodeB.pos, this.nodeA.pos, this.nodeB.mass);
+            this.updatePos(this.nodeA.pos, this.nodeB.pos, this.nodeA.mass);
+            this.updatePos(this.nodeB.pos, this.nodeA.pos, this.nodeB.mass);
         }
 
         // this.nodeA.overEvent();

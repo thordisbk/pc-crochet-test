@@ -81,7 +81,7 @@ class Stitch {
             } else if (currOnto == onto[i-1]) {
                 console.log("WARNING: Stitch() received a decrease using same ontoStitch (false decrease)");
             }
-            ontoStitches.push(currOnto);
+            this.ontoStitches.push(currOnto);
             currOnto.childStitches.push(this);
             this.springs.push(new Spring(this.node, currOnto.node, rest_dist_onto, defDamp, defSpringConstant, springColor, false));
         }
@@ -93,6 +93,10 @@ class Stitch {
             console.log("WARNING: stitch is not valid (type = " + type + ", prev = " + prev + ", onto = " + onto);
             return;
         }
+
+        // vectors
+        this.upVector = createVector(0, 0, 1);
+        this.forwardVector = createVector(0, 1, 0);
 
         // call for any stitch in a crohet structure, except the initial one
         this.stitchType = type;
@@ -253,7 +257,7 @@ class Stitch {
             // TODO what if there if there are multiple ontoStitches (case for DEC)
         }
         if (this.prevStitch != null) {
-            this.forwardVector = p5.Vector.sub(GetPosition(), this.prevStitch.GetPosition());
+            this.forwardVector = p5.Vector.sub(this.GetPosition(), this.prevStitch.GetPosition());
             this.forwardVector.normalize();
         }
     }
@@ -264,46 +268,39 @@ class Stitch {
 
     updateSprings() {
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.update();
+            this.springs[s].update();
         }
     }
 
     update() {
         this.node.update();
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.update();
+            this.springs[s].update();
         }
     }
 
     SpringsActivateAll() {
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.updatePositions = true;
+            this.springs[s].updatePositions = true;
         }
     }
 
     SpringsUpdateAll() {
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.update();
+            this.springs[s].update();
         }
     }
 
     SpringsDeactivateAll() {
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.updatePositions = false;
+            this.springs[s].updatePositions = false;
         }
     }
 
     Draw() {
-
         this.node.Draw();
         for (let s = 0; s < this.springs.length; s++) {
-            s = this.springs[s];
-            s.Draw();
+            this.springs[s].Draw();
         }
     }
 }

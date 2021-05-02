@@ -7,19 +7,16 @@
 // hold 'x', 'y', or 'z' and push the up and down arrows to rotate
 // reset rotation by clicking 'space'
 
+
 function setup() {
 
     // init globals
     InitializeGlobals();
 
-
-    createCanvas(WIDTH, HEIGHT, WEBGL);
+    // cnv = createCanvas(WIDTH, HEIGHT, WEBGL);
+    cnv = createCanvas(windowWidth, windowHeight, WEBGL);
     // createCanvas(600, 600, P3D);
     background(backgroundColor);
-    // surface.setTitle("Generative Crochet");
-    // surface.setResizable(true);
-    // frameRate(30);
-    // noCursor();
 
     if (useTests) {
         createTests();
@@ -28,10 +25,10 @@ function setup() {
         // should not be the case at setup, unless an example were to be shown
     }
 
-    // createGUI();
-    // if (DEBUG) {
-    //     createDebugGUI();
-    // }
+    this.gui = new GUI();
+    if (DEBUG) {
+        // this.debuggui = newGUIdebug();
+    }
 }
 
 function draw() {
@@ -47,67 +44,7 @@ function draw() {
     else if (generatedReady && !recordingPDF) {
         generatedCrochetStructure.Draw();
     }
-
-    if (recordingPDF) {
-        // then somewhere a PDF recording was started
-        // RecordToPDF();
-
-        // endRaw();
-        recordingPDF = false;
-    }
 }
-
-/*function RecordToPDF() {
-
-    let patternString = "";
-    let approxRealSize = "? cm";
-    if (useTests) {
-        patternString = GetActiveTestPattern();
-        approxRealSize = GetActiveTestApproximateRealSize();
-    } else if (generatedReady) {
-        let pattern = new Pattern(generatedCrochetStructure);
-        patternString = pattern.patternStr;
-        approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
-    }
-    let formattedPattern = FormatPatternString(patternString);
-
-    let pdfTitleStr = "Generated crochet";
-    let dateStr = CreateDateString();
-    let authorStr = "ÞBK";
-    let realSize = "Approximate real size of crocheted object: " + approxRealSize;
-
-    // make a PDF with the structure render
-    displayTest();
-    endRaw();
-    // pdf_structure = null;
-
-    // make a PDF with the pattern
-    pdf.beginDraw();
-    
-    // pdf.background(200, 200, 200);
-
-    pdf.fill(50);
-
-    pdf.textSize(26);
-    pdf.text(pdfTitleStr, 50, 50);
-
-    pdf.textSize(6);
-    pdf.text(realSize, 50, 80);
-    
-    pdf.textSize(6);
-    pdf.text(dateStr, 500, 550);
-    pdf.text(authorStr, 500, 570);
-    
-    pdf.textSize(12);
-    pdf.text(formattedPattern, 50, 110);
-    
-    // pdf.nextPage();
-    // draw structure on the next page
-
-    pdf.dispose();
-    pdf.endDraw();
-    pdf = null;    
-}*/
 
 function CheckKeysForRotation() {
 
@@ -160,7 +97,6 @@ function keyPressed() {
     }
 
     if (DEBUG) {
-        console.log("key: " + key);
         // reset rotation by clicking on the spacebar
         if (key == ' ') {
             ResetRotZoom();
@@ -177,6 +113,11 @@ function keyPressed() {
         if (keyCode == UP_ARROW || keyCode == DOWN_ARROW || keyCode == RIGHT_ARROW || keyCode == LEFT_ARROW) {
             ARROW_KEY_PRESSED = true;
         }  
+    }
+
+    if (key == 'p' || key == 'P') {
+        // create a PDF of the pattern of the currently active crochetStructure
+        SavePatternPDFAndImageFile();
     }
 }
 

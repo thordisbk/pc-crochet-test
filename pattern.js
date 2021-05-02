@@ -95,12 +95,14 @@ class Pattern {
             }
 
             // use the list of row strings to create a row string, look for patterns
+            let totalStitches = row.count;
+            if (row.stitches[0].stitchType == StitchTypes.SLKN) totalStitches--;
             if (rowStringList.length > 0) {
                 let res = this.ListToString(rowStringList);
-                this.patternStr += "Row " + rowCounter +  ": " + res + " (" + row.count + ")\n";
+                this.patternStr += "Row " + rowCounter +  ": " + res + " (" + totalStitches + ")\n";
             }
             else {
-                this.patternStr += "Row " + rowCounter +  ": " + rowString + " (" + row.count + ")\n";
+                this.patternStr += "Row " + rowCounter +  ": " + rowString + " (" + totalStitches + ")\n";
             }
             rowCounter++;
         }
@@ -172,7 +174,7 @@ function FormatPatternString(pattern) {
 
     let maxCharInRow = 75;
     let idxAtRowStart = 0;
-    for (let i = 0; i < pattern.length(); i++) {
+    for (let i = 0; i < pattern.length; i++) {
         let currChar = pattern.charAt(i);
         if (currChar == '\n') {
             let subStringRow = pattern.substring(idxAtRowStart, i);  // incl, excl
@@ -182,10 +184,10 @@ function FormatPatternString(pattern) {
             // console.log((rowList);
             let currLength = 0;
             for (let j = 0; j < rowList.length; j++) {
-                currLength += rowList[j].length();
+                currLength += rowList[j].length;
                 if (currLength > maxCharInRow) {
                     formattedPattern += "\n" + rowList[j] + " ";
-                    currLength = rowList[j].length();
+                    currLength = rowList[j].length;
                 } else {
                     formattedPattern += rowList[j] + " ";
                 }

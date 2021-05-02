@@ -1,5 +1,8 @@
 
-// letegers
+// import jsPDF
+const { jsPDF } = window.jspdf
+
+// integers
 const MAX_let = 2147483647;
 const MIN_let = -2147483648;
 
@@ -74,8 +77,9 @@ const StitchDescription = {
 }
 
 const CrochetType = {
-    CIRCULAR: '',
-    BACKFORTH: ''
+    CIRCULAR: 'CIRCULAR',
+    BACKFORTH: 'BACKFORTH',
+    C2C: 'C2C'
 }
 
 const YarnWeight = { 
@@ -88,3 +92,13 @@ const YarnWeight = {
     SUPERBULKY: "super bulky", 
     JUMBO: "jumbo" 
 };
+
+const WeekDays = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday"
+}
