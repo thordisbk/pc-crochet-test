@@ -26,7 +26,7 @@ class Row {
             // make a green edge/spring that connects the lastStitch to the firstStitch, but does no update like a spring
             
             // check if first stitch is a slip knot and rest is only CH, if so connect lastStitch to 2nd stitch instead of the 1st
-            let firstIsSLKN = firstStitch.stitchType == StitchTypes.SLKN;
+            let firstIsSLKN = firstStitch.stitchType === StitchTypes.SLKN;
             let restIsCH = true;
             if (firstIsSLKN) {
                 for (let i = 1; i < this.count; i++) {
@@ -37,7 +37,8 @@ class Row {
             }
             
             if (firstIsSLKN && restIsCH) {
-                if (firstStitch.nextStitch != null && firstStitch.nextStitch.node != lastStitch.node) {
+                let notJustStart = this.count > 3;
+                if (firstStitch.nextStitch != null && firstStitch.nextStitch.node != lastStitch.node && notJustStart) {
                     lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.nextStitch.node, 
                                     lastStitch.width * stitchLengthMultiplier, defDamp, defSpringConstant, 
                                     createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring

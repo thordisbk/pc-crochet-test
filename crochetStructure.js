@@ -108,11 +108,6 @@ class CrochetStructure {
     }
 
     Draw() {
-        // if (VERBOSE) console.log("CrochetStructure::Draw");
-        
-        // move current center of coordinate system from (0,0,0) to center
-        // translate(WIDTH/2, HEIGHT/2, 0);  // not with JS
-        // translate(this.centroid.x, this.centroid.y, this.centroid.z);
 
         // first update nodes, then update springs
         for (let n = 0; n < this.allNodes.length; n++) {
@@ -121,8 +116,10 @@ class CrochetStructure {
         for (let s = 0; s < this.allSprings.length; s++) {
             this.allSprings[s].update();
         }
+
         // make sure only one Node is pressed
-        this.CheckNodeSelection();
+        // this.CheckNodeSelection();
+
         // DetectNodeCollisions();
 
         // then draw
@@ -169,9 +166,6 @@ class CrochetStructure {
                 pop();
             }
         }
-
-        // move current center of coordinate system from center to (0,0,0)
-        // translate(-WIDTH/2, -HEIGHT/2, 0);  // not with JS
     }
 
     // PressNodes() {
@@ -209,27 +203,62 @@ class CrochetStructure {
         // canBeCirc and canBeBAF define whether the structure can be circular of back&forth, if both true/false then it's random
         // allSameStitch specifies whether to only use CH and SC (true), or any type of stitch (false)
         // stitchType is used if allSameStitch == true (else it is .NONE), this specifies which stitch type + CH can be used
-        
+
         this.csName = "generated crochet structure";
 
+        let MAXROWS = 50;
+        let MAXSTITCHES = 200;
+        let MAXSTITCHESROW1 = 10;
         let enableDec = false;  // TODO
 
-        if (maxRows < minRows) maxRows = minRows;
-        if (minRows < 1) minRows = 1;
-        if (maxRows < 1 || maxRows == MAX_let || maxRows > 50) maxRows = 50;  // FIXME
-        let numOfRows = int(random(minRows, maxRows));
+        // set minRows and maxRows
+        if (minRows < 1 && maxRows < 1) {  
+            // minRows and maxRows are 0, so randomize
+            minRows = int(random(1, MAXROWS));
+            maxRows = int(random(minRows, MAXROWS));
+        } else if (minRows > MAXROWS && maxRows > MAXROWS) {
+            // minRows and maxRows are > max, so randomize
+            minRows = int(random(1, MAXROWS));
+            maxRows = int(random(minRows, MAXROWS));
+        } else if (minRows > 1 && minRows <= MAXROWS) {
+            // minRows is ok, need to randomize maxRows
+            maxRows = int(random(minRows, MAXROWS));
+        } else if (maxRows > 1 && maxRows <= MAXROWS)  {
+            // maxRows is ok, need to randomize minRows
+            minRows = int(random(1, maxRows));
+        }
 
-        if (numStitchesFirstRow < 1 || numStitchesFirstRow > 10) numStitchesFirstRow = int(random(4, 10));
+        // set numStitchesFirstRow
+        if (numStitchesFirstRow < 1) numStitchesFirstRow = int(random(3, MAXSTITCHESROW1));
+        else if (numStitchesFirstRow > MAXSTITCHESROW1) numStitchesFirstRow = MAXSTITCHESROW1;
 
-        if (minStitches < numStitchesFirstRow) minStitches = numStitchesFirstRow;
+        // set minStitches and maxStitches
+        if (minStitches < 1) minStitches = int(random(numStitchesFirstRow, MAXSTITCHES));  // TODO (1, MAXSTITCHES) if enableDEC
+        else if (minStitches > MAXSTITCHES) minStitches = MAXSTITCHES;
+        // if enableDec, then minStitches can be less than numStitchesFirstRow, else it can't
+        if (!enableDec) minStitches = numStitchesFirstRow;
+
+        if (maxStitches < 1) maxStitches = int(random(minStitches, MAXSTITCHES));
+        else if (maxStitches > MAXSTITCHES) maxStitches = MAXSTITCHES;
+
         if (maxStitches < minStitches) maxStitches = minStitches;
-        if (minStitches < 1) minStitches = 1;
-        if (maxStitches < 1 || maxStitches == MAX_let || maxStitches > 300) maxStitches = 300;  // FIXME
+
+        // now choose the number of rows
+        let numOfRows = int(random(minRows, maxRows));
 
         if (canBeCirc && canBeBAF) {  // TODO remove this and implement if (canBeCirc && canBeBAF) below
             let rand = int(random(0, 2)); 
             if (rand == 0) canBeBAF = false;
             else canBeCirc = false;
+        }
+
+        if (DEBUG) {
+            console.log("Generate Restrained...");
+            console.log("numStitchesFirstRow = " + numStitchesFirstRow + 
+                        "\nminStitches = " + minStitches + "\nmaxStitches = " + maxStitches + 
+                        "\nminRows = " + minRows + "\nmaxRows = " + maxRows + 
+                        "\n\nnumOfRows = " + numOfRows + "\nenableDec = " + enableDec +
+                        "\ncanBeCirc = " + canBeCirc + "\ncanBeBAF = " + canBeBAF);
         }
 
         // generate something random with single stitches, increases, and decreased
@@ -238,23 +267,28 @@ class CrochetStructure {
 
             // randomly decide whether to start on magic ring circle or circle of multiple CHs
             // TODO
+            this.rows = [];
 
             // first row: start with slip knot and CH 2
             this.firstStitch = new Stitch();
             let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, this.firstStitch, null);
             let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
             let firstRowStitches = [this.firstStitch, stitch_ch1, stitch_ch2];
+            console.log("firstRowStitches: ", firstRowStitches);
             this.rows.push(new Row(firstRowStitches, this.crochetType));
+            console.log("rows 1: ", this.rows);
             
             // second row: choose random start stitches
             let currType = GetRandomStitchType();  // FIXME
             if (allSameStitch) currType = stitchType;
             let secondRowStitches = [];
             secondRowStitches = InitStitchIncNum(secondRowStitches, stitch_ch2, stitch_ch1, currType, numStitchesFirstRow);
+            console.log("secondRowStitches: ", secondRowStitches);
             this.rows.push(new Row(secondRowStitches, this.crochetType));
+            console.log("rows 2: ", this.rows);
             
             // consecutive rows
-            let prevStitch = secondRowStitches[secondRowStitches.length-1];
+            /*let prevStitch = secondRowStitches[secondRowStitches.length-1];
             let ontoStitch = secondRowStitches[0];
             let stitchesInPrevRow = numStitchesFirstRow;
             for (let r = 0; r < numOfRows-2; r++) {  // -2 because of first two rows above
@@ -264,16 +298,20 @@ class CrochetStructure {
                     currType = GetRandomStitchType();
                     if (allSameStitch) currType = stitchType;
 
-                    let prob = int(random(0, 1));
+                    let prob = random(0, 1);
+                    // console.log(prob);
                     if (prob > 0.8 && stitchesInCurrRow < maxStitches) {  // do and increase
+                        console.log("- make INC");
                         currRowStitches = InitStitchInc(currRowStitches, prevStitch, ontoStitch, currType);
                         stitchesInCurrRow++;
                     } else if (prob > 0.7 && stitchesInCurrRow > minStitches && enableDec && s < stitchesInPrevRow-1) { 
+                        console.log("- make DEC");
                         currRowStitches = InitStitchDec(currRowStitches, prevStitch, ontoStitch, ontoStitch.nextStitch, currType);
                         ontoStitch = ontoStitch.nextStitch;
                         stitchesInCurrRow--;
                         s++;
                     } else {
+                        console.log("- make REG");
                         currRowStitches = InitStitchSingle(currRowStitches, prevStitch, ontoStitch, currType);
                     }
                     prevStitch = currRowStitches[currRowStitches.length-1];
@@ -281,7 +319,7 @@ class CrochetStructure {
                 }
                 stitchesInPrevRow = stitchesInCurrRow;
                 this.rows.push(new Row(currRowStitches, this.crochetType));
-            }
+            }*/
         } else if (!canBeCirc && canBeBAF) {
             this.crochetType = CrochetType.BACKFORTH;
 
@@ -340,9 +378,11 @@ class CrochetStructure {
             // TODO implement the combination of CIRCULAR and BACKFORTH
             // would need to adjust how positioning works and there would not be a need for CrochetType
         } else {
-            console.log("WARNING::FIXME::GenerateRestrained(): crochet type not set");
+            console.warn("GenerateRestrained(): crochet type not set");
             return false;
         }
+
+        this.usingTest = false;
 
         this.PositionStitches();
         return true;
@@ -434,7 +474,7 @@ class CrochetStructure {
 
         // find this.centroid after stitches have been poitioned
         this.centroid = FindCentroid(true, this.rows, this.totalStitches);
-        if (VERBOSE) console.log("centroid: " + this.centroid);
+        if (VERBOSE || DEBUG) console.log("centroid: " + this.centroid);
     }
 
     PositionOneStitchThenActivateSprings() {
@@ -510,7 +550,7 @@ class CrochetStructure {
                     pos = p5.Vector.add(prevStitch.GetPosition(), pos);
                 } else if (ontoStitch != null && prevStitch == null) {
                     // not a thing, there should always be a prevStitch of there is an ontoStitch
-                    console.log("WARNING::FIXME::PositionOneStitchThenActivateSprings(): (prev = null) but (onto != null)");
+                    console.warn("PositionOneStitchThenActivateSprings(): (prev = null) but (onto != null)");
                 }
                 stitch.SetPosition(pos);
 
@@ -746,6 +786,8 @@ class CrochetStructure {
 
             counter++;
         }
+        // update all including newest
+        // this.UpdatePreviousStitches(this.rows.length-1, this.rows[this.rows.length-1].count-1, 1000, true);
     }
 
     FixStitchPositionsBackForth() {

@@ -31,7 +31,7 @@ const sphereRadius = 5;
 // in CrochetStructure, if true: fix positions using the center most stitch; if false: use the ontoStitch instead
 // let useOriginStitchForCentering = true;
 // in Row, if true: create an edge between the first stitch in a row and the last stitch in the previous row
-let connectStartEndStitches = true;
+const connectStartEndStitches = true;
 
 const showCentroid = false;
 

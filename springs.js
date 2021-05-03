@@ -17,7 +17,7 @@ class Node {
         if (arguments.length == 4) this.Node(arguments[0], arguments[1], arguments[2], arguments[3]);
         else if (arguments.length == 5) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
         else if (arguments.length == 6) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
-        else console.log("WARNING:Node() constructor received wrong number of arguments");
+        else console.warn("Node() constructor received wrong number of arguments");
     }
 
     // Constructor, main (rad, position, mass, color)

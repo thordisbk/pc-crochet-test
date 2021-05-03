@@ -13,6 +13,8 @@ function ResetRotZoom() {
 // canvas ref
 let cnv;
 
+let gui;
+
 // 'true' uses the tests from testcased.pde, set to false when a structure is generated via gui
 let useTests;
 

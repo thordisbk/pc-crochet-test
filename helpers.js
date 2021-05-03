@@ -87,6 +87,9 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
         let pattern = new Pattern(generatedCrochetStructure);
         patternString = pattern.patternStr;
         approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    } else {
+        console.error("SavePatternPDFAndImageFile(): no crochet structure ready");
+        return;
     }
     let formattedPattern = FormatPatternString(patternString);
     let realSize = "Approximate real size of crocheted object: " + approxRealSize;

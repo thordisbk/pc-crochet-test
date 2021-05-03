@@ -40,7 +40,7 @@ class Stitch {
         else if (arguments.length === 1) this.Stitch1(arguments[0]);
         else if (arguments.length === 3) this.Stitch3(arguments[0], arguments[1], arguments[2]);
         else if (arguments.length === 4) this.Stitch4(arguments[0], arguments[1], arguments[2], arguments[3]);
-        else console.log("WARNING:Stitch() constructor received wrong number of arguments");
+        else console.warn("Stitch() constructor received wrong number of arguments");
     }
 
     Stitch0() {
@@ -52,6 +52,7 @@ class Stitch {
     Stitch1(type) {
         // call for first stitch in a crochet structure (slip knot or magic ring)
         if (type != StitchTypes.SLKN && type != StitchTypes.MR) {
+            console.warn("Stitch(): needs to be provided a SLKN or MR");
             return;
         }
         this.Init(type, StitchDescription.START, createVector(0, 0, 0), null, null);
@@ -66,7 +67,7 @@ class Stitch {
     Stitch3(type, prev, onto) {
         // call for any DEC stitch in a crochet structure
         if (onto.length < 2) {
-            console.log("WARNING: this Stitch constructor needs to be provided at least two ontoStitches");
+            console.warn("Stitch(): needs to be provided at least two ontoStitches");
             return;
         }
         let pos = createVector(0, 0, 0);
@@ -77,9 +78,9 @@ class Stitch {
         for (let i = 1; i < onto.length; i++) {
             let currOnto = onto[i];
             if (currOnto == null) {
-                console.log("WARNING: Stitch() received a null ontoStitch");
+                console.warn("Stitch() received a null ontoStitch");
             } else if (currOnto == onto[i-1]) {
-                console.log("WARNING: Stitch() received a decrease using same ontoStitch (false decrease)");
+                console.warn("Stitch() received a decrease using same ontoStitch (false decrease)");
             }
             this.ontoStitches.push(currOnto);
             currOnto.childStitches.push(this);
@@ -90,11 +91,11 @@ class Stitch {
     Init(type, description, pos, prev, onto) {
 
         if (!this.ValidateStitch(type, prev, onto)) {
-            console.log("WARNING: stitch is not valid (type = " + type + ", prev = " + prev + ", onto = " + onto);
+            console.warn("Init(): stitch is not valid (type = " + type + ", prev = " + prev + ", onto = " + onto);
             return;
         }
 
-        // vectors
+        // direction vectors
         this.upVector = createVector(0, 0, 1);
         this.forwardVector = createVector(0, 1, 0);
 
@@ -108,9 +109,6 @@ class Stitch {
         this.childStitches = [];
         this.ontoStitches = [];
 
-        // let tempVal = 255/25;
-        // stitchColor = createVector(colorIncrease * tempVal, colorIncrease * tempVal, colorIncrease * tempVal);
-        // colorIncrease++;
         this.stitchColor = this.GetStitchColor();
         this.length = this.GetStitchLength();
         this.width = this.GetStitchWidth();
@@ -128,14 +126,14 @@ class Stitch {
             this.springs.push(new Spring(this.node, this.ontoStitch.node, rest_dist_onto, defDamp, defSpringConstant, springColor, false));
             this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, defDamp, defSpringConstant, springColor, false));
         }
-        else if (prev == null) {
-            console.log("WARNING::FIXME::Stitch(): (prev = null) but (onto != null)");  // TODO should not happen
-            return;
-        }
         else if (onto == null) {
             // then this is most likely a CH
             this.node = new Node(sphereRadius, pos, defMass, this.stitchColor);  // (rad, position, mass, color)
             this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, defDamp, defSpringConstant, springColor, false));
+        }
+        else if (prev == null) {
+            console.warn("Stitch(): (prev = null) but (onto != null)");
+            return;
         }
 
         this.nextStitch = null;
@@ -239,6 +237,15 @@ class Stitch {
             }
         }
         return origin;
+    }
+
+    GetLastOntoStitch() {
+        // returns an onto stitch of this stitch
+        // useful when retrieving an ontoStitch of the last made stitch; no need to check if it is a decrease
+        if (this.ontoStitches.length > 0) {
+            return this.ontoStitches[this.ontoStitches.length-1];
+        }
+        return this.ontoStitch;
     }
 
     RecalculateVectors() {

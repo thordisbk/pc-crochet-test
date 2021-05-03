@@ -49,7 +49,7 @@ function button_generate(GButton source, GEvent event) {
     
     if (o_gaugemeasure.isSelected()) {
         if (!islet(t_rowlength.getText()) || !islet(t_rowwidth.getText())) {
-            console.log(("WARNING: row width and length must be let or let");
+            console.warn(("button_generate() row width and length must be let or let");
             return;
         }
         let rowWidth = let.parselet(t_rowwidth.getText());
@@ -115,7 +115,7 @@ function button_generate(GButton source, GEvent event) {
     // generatedCrochetStructure.Generate();
     
     if (!ok) {
-        console.log(("ERROR: something went wrong while generating structure");
+        console.error(("button_generate(): something went wrong while generating structure");
         return;
     }
 

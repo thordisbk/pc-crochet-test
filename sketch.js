@@ -25,7 +25,7 @@ function setup() {
         // should not be the case at setup, unless an example were to be shown
     }
 
-    this.gui = new GUI();
+    gui = new GUI();
     if (DEBUG) {
         // this.debuggui = newGUIdebug();
     }
@@ -44,6 +44,9 @@ function draw() {
     else if (generatedReady && !recordingPDF) {
         generatedCrochetStructure.Draw();
     }
+    // if they have been changed by gui
+    ZOOM = zoom;
+    ROTATION.set(rot_x, rot_y, rot_z);
 }
 
 function CheckKeysForRotation() {
@@ -118,6 +121,23 @@ function keyPressed() {
     if (key == 'p' || key == 'P') {
         // create a PDF of the pattern of the currently active crochetStructure
         SavePatternPDFAndImageFile();
+    }
+
+    if (key == 'o' || key == 'O') {
+        // activate springs for currently active structure
+        // when the generated structure is ready
+        let springsAreActive = false;
+        if (!useTests && generatedReady) {
+            generatedCrochetStructure.UpdatePreviousStitches(generatedCrochetStructure.rows.length-1, 
+                generatedCrochetStructure.rows[generatedCrochetStructure.rows.length-1].count-1, 1000, true);
+        } else {
+            ActiveTestUpdatePreviousStitches();
+        }
+    }
+
+    if (key == 'h' || key == 'H') {
+        // show hide GUIs
+        gui.showhide();
     }
 }
 

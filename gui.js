@@ -2,27 +2,22 @@
 
 var yarn_weight = YARN_WEIGHTS;
 var hook_size = HOOK_SIZES;
-var pdfname = "pattern.pdf";
-var booltest = true;
-var colortest = "#00ddff";
-var inttest = 20;
-var floattest = 1.24;
-var approxRealSize = "Approximate real size: ? cm";
+// var colortest = "#00ddff";
 
 var use_measure = false;
 var use_standard = true;
 var input_length_rows = "10";
 var input_width_rows = "10";
 
-var stitch_type = ["SC"]; // STITCH_TYPES;
-var first_row_stitches = "0";
-var min_stitches = "0";
-var max_stitches = "0";
-var min_rows = "0";
-var max_rows = "0";
-var crochet_type = ["CIRCULAR"]; //["CIRCULAR", "BACKFORTH", "C2C"];
+var stitch_type_to_use = ["SC"]; // STITCH_TYPES;
+var stitches_in_first_row = 0;
+var min_stitches_in_a_row = 0;
+var max_stitches_in_a_row = 0;
+var min_number_of_rows = 0;
+var max_number_of_rows = 0;
+var crochet_type_to_make = ["CIRCULAR"]; //["CIRCULAR", "BACKFORTH", "C2C"];
 
-var pdfname = "pattern";
+var pdf_file_name = "pattern";
 var approximate_real_size = "? cm";
 
 var zoom = 1.0;
@@ -56,43 +51,42 @@ class GUI {
         gui_gen = this.createGUIparam();
         gui_pattern = this.createGUIpattern();
         gui_zoomrot = this.createGUIzoomrotate();
+
+        // TODO test gui and hide/show
+        this.visible = true;
     }
 
     createGUIgenGauge(gauge) {
         let gui = createGui('Generation gauge').setPosition(10, 10);
 
         if (gauge == 'standard') {
-            // gui.addCheckBoxWithCallback('use_standard', use_standard, function() {
-            //     gaugeChange();
-            // });
             gui.addButton('use_standard', function() {
                 gaugeChange();
             });
             gui.addGlobals('hook_size', 'yarn_weight');
         }
         else if (gauge == 'measure') {
-            // gui.addCheckBoxWithCallback('use_measure', use_measure, function() {
-            //     gaugeChange();
-            // });
             gui.addButton('use_measure', function() {
                 gaugeChange();
             });
             gui.addGlobals('input_length_rows', 'input_width_rows');
         }
         else {
-            console.log("ERROR:GUI() incorrect gauge string provided");
+            console.error("GUI() incorrect gauge string provided");
         }
-
-        // sliderRange(0, 50, 1);
-        // liderRange(0, 10, 0.1);
         return gui;
     }
 
     createGUIparam() {
         let gui = createGui('Generation parameters').setPosition(10, 200);
-        gui.addGlobals('stitch_type');
-        gui.addGlobals('first_row_stitches', 'min_stitches', 'max_stitches', 'min_rows', 'max_rows');
-        gui.addGlobals('crochet_type');
+        gui.addGlobals('stitch_type_to_use');
+        sliderRange(0, 10, 1);
+        gui.addGlobals('stitches_in_first_row');
+        sliderRange(0, 50, 1);
+        gui.addGlobals('min_number_of_rows', 'max_number_of_rows');
+        sliderRange(0, 300, 1);
+        gui.addGlobals('min_stitches_in_a_row', 'max_stitches_in_a_row');
+        gui.addGlobals('crochet_type_to_make');
         gui.addButton("GENERATE", function() {
             generateUsingInput();
         });
@@ -100,16 +94,16 @@ class GUI {
     }
 
     createGUIpattern() {
-        let gui = createGui('Get pattern').setPosition(width - 200, 10);
-        gui.addGlobals('pdfname', 'approximate_real_size');
+        let gui = createGui('Get pattern').setPosition(width - 210, 10);
+        gui.addGlobals('pdf_file_name', 'approximate_real_size');
         gui.addButton("Download pattern & image", function() {
-            SavePatternPDFAndImageFile(pdfname);
+            SavePatternPDFAndImageFile(pdf_file_name);
         });
         return gui;
     }
 
     createGUIzoomrotate() {
-        let gui = createGui('Zoom & Rotate').setPosition(width - 200, 200);
+        let gui = createGui('Zoom & Rotate').setPosition(width - 210, 200);
         sliderRange(0.1, 10, 0.1);
         gui.addGlobals('zoom');
         sliderRange(-180.0, 180, 0.1);
@@ -119,13 +113,68 @@ class GUI {
         });
         return gui;
     }
+
+    showhide() {
+        if (this.visible) {
+            gui_gen_standard.hide();
+            gui_gen_measure.hide();
+            gui_gen.hide();
+            gui_pattern.hide();
+            gui_zoomrot.hide();
+            this.visible = false;
+        } else {
+            if (use_standard) gui_gen_standard.show();
+            if (use_measure) gui_gen_measure.show();
+            gui_gen.show();
+            gui_pattern.show();
+            gui_zoomrot.show();
+            this.visible = true;
+        }
+    }
 }
 
 function generateUsingInput() {
-    console.log("randomize called");
-    // gui.setRangeValue('numShapes', random(0, 100));
+    noLoop();
 
-    generatedCrochetStructure = new CrochetStructure(type, rowWidth, rowLength);
+    if (DEBUG) {
+        console.log("generate crochet structure");
+        console.log("use_measure = " + use_measure + " | use_standard = " + use_standard);
+        console.log("crochet: " + crochet_type_to_make);
+        console.log("input_width_rows: " + input_width_rows);
+        console.log("input_length_rows: " + input_length_rows);
+        console.log("hook_size: " + hook_size);
+        console.log("yarn_weight: " + yarn_weight);
+        console.log("min_number_of_rows: " + min_number_of_rows);
+        console.log("max_number_of_rows: " + max_number_of_rows);
+        console.log("min_stitches_in_a_row: " + min_stitches_in_a_row);
+        console.log("max_stitches_in_a_row: " + max_stitches_in_a_row);
+        console.log("stitches_in_first_row: " + stitches_in_first_row);
+        console.log("stitch_type_to_use: " + stitch_type_to_use);
+    }
+
+    if (use_measure === true ) {
+        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, input_width_rows, input_length_rows);
+    }
+    else if (use_standard === true) {
+        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, hook_size, yarn_weight);
+    }
+
+    let ok = generatedCrochetStructure.GenerateRestrained(min_number_of_rows, max_number_of_rows, 
+        min_stitches_in_a_row, max_stitches_in_a_row, stitches_in_first_row, true, false, true, stitch_type_to_use);
+
+    if (ok === false) {
+        console.error("generateUsingInput() something went wrong while generating structure");
+        return;
+    }
+
+    generatedReady = true;
+    useTests = false;
+
+    let approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    approximate_real_size = approxRealSize;
+    gui_pattern.prototype.setValue('approximate_real_size', approxRealSize);
+
+    loop();
 }
 
 function gaugeChange() {
@@ -145,5 +194,8 @@ function gaugeChange() {
 }
 
 function resetZoomRotGUI() {
-    // TODO
+    gui_zoomrot.prototype.setValue('zoom', 1.0);
+    gui_zoomrot.prototype.setValue('rot_x', 0.0);
+    gui_zoomrot.prototype.setValue('rot_y', 0.0);
+    gui_zoomrot.prototype.setValue('rot_z', 0.0);
 }
