@@ -138,6 +138,17 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
     loop();
 }
 
+function UpdateSpringsOfActiveStructure() {
+    // when the generated structure is ready, activate that one, else active springs of currently active test
+    let springsAreActive = false;
+    if (!useTests && generatedReady) {
+        generatedCrochetStructure.UpdatePreviousStitches(generatedCrochetStructure.rows.length-1, 
+            generatedCrochetStructure.rows[generatedCrochetStructure.rows.length-1].count-1, 1000, true);
+    } else {
+        ActiveTestUpdatePreviousStitches();
+    }
+}
+
 function GetRandomStitchType() {
     let rand = int(random(0, 7)); 
     if (rand == 0) return StitchTypes.CH;

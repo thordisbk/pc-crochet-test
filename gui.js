@@ -30,6 +30,7 @@ let gui_gen_measure;
 let gui_gen;
 let gui_pattern;
 let gui_zoomrot;
+let gui_springs;
 
 class GUI {
 
@@ -52,6 +53,7 @@ class GUI {
         gui_gen = this.createGUIparam();
         gui_pattern = this.createGUIpattern();
         gui_zoomrot = this.createGUIzoomrotate();
+        gui_springs = this.createGUIsprings();
 
         // TODO test gui and hide/show
         this.visible = true;
@@ -111,6 +113,14 @@ class GUI {
         gui.addGlobals('rot_x', 'rot_y', 'rot_z');
         gui.addButton("Reset", function() {
             resetZoomRotGUI();
+        });
+        return gui;
+    }
+
+    createGUIsprings() {
+        let gui = createGui('Adjust structure').setPosition(width - 210, 480);
+        gui.addButton("Activate springs", function() {
+            UpdateSpringsOfActiveStructure();
         });
         return gui;
     }

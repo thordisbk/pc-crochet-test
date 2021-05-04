@@ -222,13 +222,15 @@ class CrochetStructure {
             // minRows and maxRows are > max, so randomize
             minRows = int(random(1, MAXROWS));
             maxRows = int(random(minRows, MAXROWS));
+        } else if ((minRows > 1 && minRows <= MAXROWS) && (maxRows > 1 && maxRows <= MAXROWS)) {
+            // both are ok, leave them be
         } else if (minRows > 1 && minRows <= MAXROWS) {
             // minRows is ok, need to randomize maxRows
             maxRows = int(random(minRows, MAXROWS));
         } else if (maxRows > 1 && maxRows <= MAXROWS)  {
             // maxRows is ok, need to randomize minRows
             minRows = int(random(1, maxRows));
-        }
+        } 
 
         // set numStitchesFirstRow
         if (numStitchesFirstRow < 1) numStitchesFirstRow = int(random(3, MAXSTITCHESROW1));
