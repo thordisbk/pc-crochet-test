@@ -4,8 +4,8 @@
 function createTests() {
     let circs = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
     // let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    // let active = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];  // one active
-    let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]; // only circular active
+    let active = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];  // one active
+    // let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]; // only circular active
     for (let i = 0; i < MAX_TESTS; i++) {
         let type = (circs[i] == 1) ? CrochetType.CIRCULAR : CrochetType.BACKFORTH;
         let crochetStructure = new CrochetStructure(type, 5.5, YarnWeight.MEDIUM);

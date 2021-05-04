@@ -14,14 +14,15 @@ class Node {
     // let mass;  // mass of the node, for spring physics
 
     constructor() {
-        if (arguments.length == 4) this.Node(arguments[0], arguments[1], arguments[2], arguments[3]);
-        else if (arguments.length == 5) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
-        else if (arguments.length == 6) this.Node(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+        // console.log("args: " + arguments.length);
+        if (arguments.length == 4) this.Node1(arguments[0], arguments[1], arguments[2], arguments[3]);
+        else if (arguments.length == 5) this.Node2(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+        else if (arguments.length == 6) this.Node3(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
         else console.warn("Node() constructor received wrong number of arguments");
     }
 
     // Constructor, main (rad, position, mass, color)
-    Node(r, p, m, c) {
+    Node1(r, p, m, c) {
         this.pos = p;
         this.radius = r;
         this.mass = m;
@@ -30,7 +31,7 @@ class Node {
     }
 
     // Constructor, main (rad, position, mass, color)
-    Node(r, x, y, z, m, c) {
+    Node2(r, x, y, z, m, c) {
         this.pos = createVector(x, y, z);
         this.radius = r;
         this.mass = m;
@@ -39,7 +40,7 @@ class Node {
     }
 
     // Constructor, without color
-    Node(r, x, y, z, m) {
+    Node3(r, x, y, z, m) {
         this.pos = createVector(x, y, z);
         this.radius = r;
         this.mass = m;
@@ -177,15 +178,18 @@ class Spring {
     update() {
 
         if (this.isSpring && this.updatePositions) {
-            this.updatePos(this.nodeA.pos, this.nodeB.pos, this.nodeA.mass);
-            this.updatePos(this.nodeB.pos, this.nodeA.pos, this.nodeB.mass);
+            this.updatePos(this.nodeA, this.nodeB, this.nodeA.mass);
+            this.updatePos(this.nodeB, this.nodeA, this.nodeB.mass);
         }
 
         // this.nodeA.overEvent();
         // this.nodeB.overEvent();
     }
 
-    updatePos(pos1, pos2, mass) {
+    updatePos(node1, node2, mass) {
+
+        let pos1 = node1.pos;
+        let pos2 = node2.pos;
 
         // if this frame will bring the ball closer to rest pos --> stop
         let prev_rest_temp_dist = p5.Vector.dist(pos1, pos2);
@@ -204,7 +208,6 @@ class Spring {
         this.acceleration = this.force / mass;                        // Set the acceleration, f=ma == a=f/m
         this.velocity.z = this.damp * (this.velocity.z + this.acceleration);    // Set the velocity
         pos2.z = pos2.z + this.velocity.z;                       // Updated position
-        // console.log("Correct: " + pos2 + "\n");
 
         let curr_rest_temp_dist = p5.Vector.dist(pos1, pos2);
 
@@ -216,6 +219,9 @@ class Spring {
             newPos.mult(this.rest_dist);
             pos2.set(pos1.x + newPos.x, pos1.y + newPos.y, pos1.z + newPos.z);
         }
+
+        node1.pos = pos1;
+        node2.pos = pos2;
     }
 
     Draw() {

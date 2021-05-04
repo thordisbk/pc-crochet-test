@@ -7,9 +7,6 @@ class Pattern {
     // boolean checkForIncreases = true;
 
     constructor(cs) {
-        this.condenseStitches = true;
-        this.checkForIncreases = true;
-
         this.crochetStructure = cs;
         this.patternStr = "Pattern:\n";
         let rowCounter = 0;
@@ -17,7 +14,7 @@ class Pattern {
             let row = cs.rows[r];
             let rowString = "";
             let rowStringList = [];
-            if (this.condenseStitches && !this.checkForIncreases) {
+            if (condenseStitches && !checkForIncreases) {
                 for (let i = 0; i < row.stitches.length; i++) {
                     let stitch = row.stitches[i];
                     let currType = stitch.stitchType;
@@ -33,11 +30,11 @@ class Pattern {
                         rowString += stitch.stitchType;
                     if (i+1 < row.stitches.length)
                         rowString += ", ";
-                    else if (cs.crochetType == CrochetType.BACKFORTH && rowCounter != 0)
-                        rowString += ", TURN";
+                    else if (endBackForthRowsWithTurn && cs.crochetType == CrochetType.BACKFORTH && rowCounter != 0)
+                        rowString += ", turn";
                 }
             }
-            else if (this.condenseStitches && this.checkForIncreases) {
+            else if (condenseStitches && checkForIncreases) {
                 
                 // check the type and description to determine inc and dec
                 for (let i = 0; i < row.stitches.length; i++) {
@@ -54,7 +51,10 @@ class Pattern {
 
                         let elem = "";
                         if (incNums == 2) elem = stitch.stitchType + "-INC";
-                        else elem = "do " + incNums + " " + currType + " in next stitch";
+                        else {
+                            elem = "make " + incNums + " " + currType + " in next stitch";
+                            if (cs.crochetType == "CIRCULAR" && i === row.stitches.length-1) elem += " to form a ring"
+                        }
                         rowStringList.push(elem);
                     } else if (currDesc == StitchDescription.DEC && stitch.ontoStitch != null) {
                         let decNums = stitch.ontoStitches.length + 1;
@@ -75,9 +75,15 @@ class Pattern {
                     if (i+1 < row.stitches.length) {
                         rowString += ", ";
                     }
-                    else if (cs.crochetType == CrochetType.BACKFORTH && rowCounter != 0) {
-                        rowString += ", TURN";
+                    else if (endBackForthRowsWithTurn && cs.crochetType == CrochetType.BACKFORTH && rowCounter != 0) {
+                        rowString += ", turn";
+                        rowStringList.push("turn");
                     }
+                }
+
+                if (endCircularRowsWithJoin && cs.crochetType == "CIRCULAR" && r > 0) {
+                    let elem = "join";
+                    rowStringList.push(elem);
                 }
             }
             else {

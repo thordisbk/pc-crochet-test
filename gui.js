@@ -81,11 +81,11 @@ class GUI {
     createGUIparam() {
         let gui = createGui('Generation parameters').setPosition(10, 200);
         gui.addGlobals('stitch_type_to_use');
-        sliderRange(0, 10, 1);
+        sliderRange(0, MAXSTITCHESROW1, 1);
         gui.addGlobals('stitches_in_first_row');
-        sliderRange(0, 50, 1);
+        sliderRange(0, MAXROWS, 1);
         gui.addGlobals('min_number_of_rows', 'max_number_of_rows');
-        sliderRange(0, 300, 1);
+        sliderRange(0, MAXSTITCHES, 1);
         gui.addGlobals('min_stitches_in_a_row', 'max_stitches_in_a_row');
         gui.addGlobals('crochet_type_to_make');
         gui.addButton("Generate", function() {

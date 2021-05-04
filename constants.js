@@ -50,7 +50,26 @@ const HOOK_SIZES = [ "2.0 mm", "2.25 mm", "2.5 mm", "2.75 mm", "3.0 mm", "3.25 m
                         "9.0 mm", "10 mm", "12 mm", "15 mm", "16 mm", "19 mm", "25 mm", "35 mm" ];
 const STITCH_TYPES = [ "SC", "HDC", "DC", "TR" ];
 
-//
+// springs
+const MASS_default = 10.0;
+// Damping simulates energy loss, and it is used in physics simulations to make sure 
+//  that springs don’t oscillate forever but come to rest over time.
+const DAMP_default = 0.9;
+// k is a constant describing the tightness of the spring. 
+//  Larger values of k mean that the spring is tighter and will therefore stretch less per unit of force, 
+//  smaller values mean the spring is looser and will stretch further.
+const k_SPRINGCONST_default = 0.05;
+
+// generation restraints
+const MAXROWS = 50;
+const MAXSTITCHES = 200;
+const MAXSTITCHESROW1 = 10;
+
+// for pattern making
+const endCircularRowsWithJoin = true;
+const endBackForthRowsWithTurn = true;
+const condenseStitches = true;
+const checkForIncreases = true;
 
 const StitchTypes = {
     CH: 'CH',

@@ -211,9 +211,6 @@ class CrochetStructure {
 
         this.csName = "generated crochet structure";
 
-        let MAXROWS = 50;
-        let MAXSTITCHES = 200;
-        let MAXSTITCHESROW1 = 10;
         let enableDec = false;  // TODO
 
         // set minRows and maxRows
@@ -566,6 +563,7 @@ class CrochetStructure {
 
     UpdatePreviousStitches(r, s, n, includeCurrent) {
         // activate all previous rows and stitches, except in current row; only activate positioned stitches
+        //  up to stitch s in row r, update n times
         if (!includeCurrent)
             s = s-1;
 
@@ -782,6 +780,7 @@ class CrochetStructure {
             if (VERBOSE) console.log("AFTER: circumference | actual = " + newActualCirc + " | desired = " + desiredCircumference);
 
             counter++;
+            // this.UpdatePreviousStitches(r, this.rows[r].count-1, 1000, true);
         }
         // update all including newest
         // this.UpdatePreviousStitches(this.rows.length-1, this.rows[this.rows.length-1].count-1, 1000, true);

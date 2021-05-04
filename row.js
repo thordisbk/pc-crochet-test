@@ -40,18 +40,18 @@ class Row {
                 let notJustStart = this.count > 3;
                 if (firstStitch.nextStitch != null && firstStitch.nextStitch.node != lastStitch.node && notJustStart) {
                     lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.nextStitch.node, 
-                                    lastStitch.width * stitchLengthMultiplier, defDamp, defSpringConstant, 
+                                    lastStitch.width * stitchLengthMultiplier, DAMP_default, k_SPRINGCONST_default, 
                                     createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
                 }
             } else {
                 // if not only CH, connect lastStitch to first stitch
                 lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.node, 
-                                    lastStitch.width * stitchLengthMultiplier, defDamp, defSpringConstant, 
+                                    lastStitch.width * stitchLengthMultiplier, DAMP_default, k_SPRINGCONST_default, 
                                     createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
             }
 
 
-            // springs.push(new Spring(node, prevStitch.node, rest_dist_prev, defDamp, defSpringConstant));
+            // springs.push(new Spring(node, prevStitch.node, rest_dist_prev, DAMP_default, k_SPRINGCONST_default));
         }
         /*else if (this.crochetType == CrochetType.BACKFORTH && (this.count > 1 && connectStartEndStitches && this.stitches[0].prevStitch != null)) {
             if (VERBOSE) console.log("Row::Row connect start stitch to last row's end stitch\n");

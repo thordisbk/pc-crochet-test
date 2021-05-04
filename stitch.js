@@ -84,7 +84,7 @@ class Stitch {
             }
             this.ontoStitches.push(currOnto);
             currOnto.childStitches.push(this);
-            this.springs.push(new Spring(this.node, currOnto.node, rest_dist_onto, defDamp, defSpringConstant, springColor, false));
+            this.springs.push(new Spring(this.node, currOnto.node, rest_dist_onto, DAMP_default, k_SPRINGCONST_default, springColor, false));
         }
     }
     
@@ -118,18 +118,18 @@ class Stitch {
 
         if (prev == null && onto == null) {
             // then this is the very first stitch (CH or SLKN)
-            this.node = new Node(sphereRadius, pos, defMass, this.stitchColor);  // (rad, position, mass, color)
+            this.node = new Node(sphereRadius, pos, MASS_default, this.stitchColor);  // (rad, position, mass, color)
         }
         else if (prev != null && onto != null) {
             // then this is a typical stitch
-            this.node = new Node(sphereRadius, pos, defMass, this.stitchColor);  // (rad, position, mass, color)
-            this.springs.push(new Spring(this.node, this.ontoStitch.node, rest_dist_onto, defDamp, defSpringConstant, springColor, false));
-            this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, defDamp, defSpringConstant, springColor, false));
+            this.node = new Node(sphereRadius, pos, MASS_default, this.stitchColor);  // (rad, position, mass, color)
+            this.springs.push(new Spring(this.node, this.ontoStitch.node, rest_dist_onto, DAMP_default, k_SPRINGCONST_default, springColor, false));
+            this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, DAMP_default, k_SPRINGCONST_default, springColor, false));
         }
         else if (onto == null) {
             // then this is most likely a CH
-            this.node = new Node(sphereRadius, pos, defMass, this.stitchColor);  // (rad, position, mass, color)
-            this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, defDamp, defSpringConstant, springColor, false));
+            this.node = new Node(sphereRadius, pos, MASS_default, this.stitchColor);  // (rad, position, mass, color)
+            this.springs.push(new Spring(this.node, this.prevStitch.node, rest_dist_prev, DAMP_default, k_SPRINGCONST_default, springColor, false));
         }
         else if (prev == null) {
             console.warn("Stitch(): (prev = null) but (onto != null)");
