@@ -43,6 +43,7 @@ class CrochetStructure {
         this.crochetType = ct;
         this.hookSize = hs;
         this.yarnWeight = yw;
+        this.gauge = "standard";
         // TODO since hook and yarn were given instead of the sizes of a gauge, find the standard tension
         this.tensionLength = 1.0;
         this.tensionWidth = 1.0;
@@ -57,6 +58,7 @@ class CrochetStructure {
         this.yarnWeight = null;
         this.tensionLength = len10x10 / 10.0;
         this.tensionWidth = wid10x10 / 10.0;
+        this.gauge = "measure";
 
         this.InitializeVars();
     }
@@ -274,21 +276,17 @@ class CrochetStructure {
             let stitch_ch1 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, this.firstStitch, null);
             let stitch_ch2 = new Stitch(StitchTypes.CH, StitchDescription.REGULAR, stitch_ch1, null);
             let firstRowStitches = [this.firstStitch, stitch_ch1, stitch_ch2];
-            console.log("firstRowStitches: ", firstRowStitches);
             this.rows.push(new Row(firstRowStitches, this.crochetType));
-            console.log("rows 1: ", this.rows);
             
             // second row: choose random start stitches
             let currType = GetRandomStitchType();  // FIXME
             if (allSameStitch) currType = stitchType;
             let secondRowStitches = [];
             secondRowStitches = InitStitchIncNum(secondRowStitches, stitch_ch2, stitch_ch1, currType, numStitchesFirstRow);
-            console.log("secondRowStitches: ", secondRowStitches);
             this.rows.push(new Row(secondRowStitches, this.crochetType));
-            console.log("rows 2: ", this.rows);
             
             // consecutive rows
-            /*let prevStitch = secondRowStitches[secondRowStitches.length-1];
+            let prevStitch = secondRowStitches[secondRowStitches.length-1];
             let ontoStitch = secondRowStitches[0];
             let stitchesInPrevRow = numStitchesFirstRow;
             for (let r = 0; r < numOfRows-2; r++) {  // -2 because of first two rows above
@@ -319,7 +317,7 @@ class CrochetStructure {
                 }
                 stitchesInPrevRow = stitchesInCurrRow;
                 this.rows.push(new Row(currRowStitches, this.crochetType));
-            }*/
+            }
         } else if (!canBeCirc && canBeBAF) {
             this.crochetType = CrochetType.BACKFORTH;
 
@@ -1067,5 +1065,19 @@ class CrochetStructure {
         if (rs_z < minVal) rs_z = minVal;
 
         return "~ " + nf(rs_x, 0, 1) + " x " + nf(rs_y, 0, 1) + " x " + nf(rs_z, 0, 1) + " cm";
+    }
+
+    GetGaugeInfo() {
+        let res = "";
+
+        if (this.gauge === "standard") {
+            res = `Hook size: ${this.hookSize}\nYarn weight: ${this.yarnWeight}\n`;
+        } else if (this.gauge === "measure") {
+            res = `10x10`;
+        } else {
+            console.warn("GetGaugeInfo(): gauge string not set");
+        }
+
+        return res;
     }
 }

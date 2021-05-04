@@ -44,9 +44,8 @@ function draw() {
     else if (generatedReady && !recordingPDF) {
         generatedCrochetStructure.Draw();
     }
-    // if they have been changed by gui
-    ZOOM = zoom;
-    ROTATION.set(rot_x, rot_y, rot_z);
+
+    gui.update();
 }
 
 function CheckKeysForRotation() {

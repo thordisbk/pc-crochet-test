@@ -4,8 +4,8 @@ var yarn_weight = YARN_WEIGHTS;
 var hook_size = HOOK_SIZES;
 // var colortest = "#00ddff";
 
-var use_measure = false;
-var use_standard = true;
+var use_measure_gauge = true;
+var use_standard_gauge = true;
 var input_length_rows = "10";
 var input_width_rows = "10";
 
@@ -47,6 +47,7 @@ class GUI {
         gui_gen_standard = this.createGUIgenGauge('standard');
         gui_gen_measure = this.createGUIgenGauge('measure');
         gui_gen_measure.hide();
+        use_measure_gauge = false;
 
         gui_gen = this.createGUIparam();
         gui_pattern = this.createGUIpattern();
@@ -57,19 +58,19 @@ class GUI {
     }
 
     createGUIgenGauge(gauge) {
-        let gui = createGui('Generation gauge').setPosition(10, 10);
+        let gui = createGui('Generation gauge (' + gauge + ')').setPosition(10, 10);
 
         if (gauge == 'standard') {
-            gui.addButton('use_standard', function() {
+            gui.addGlobals('hook_size', 'yarn_weight');
+            gui.addButton('use_measure_gauge', function() {
                 gaugeChange();
             });
-            gui.addGlobals('hook_size', 'yarn_weight');
         }
         else if (gauge == 'measure') {
-            gui.addButton('use_measure', function() {
+            gui.addGlobals('input_length_rows', 'input_width_rows');
+            gui.addButton('use_standard_gauge', function() {
                 gaugeChange();
             });
-            gui.addGlobals('input_length_rows', 'input_width_rows');
         }
         else {
             console.error("GUI() incorrect gauge string provided");
@@ -123,13 +124,25 @@ class GUI {
             gui_zoomrot.hide();
             this.visible = false;
         } else {
-            if (use_standard) gui_gen_standard.show();
-            if (use_measure) gui_gen_measure.show();
+            if (use_standard_gauge) gui_gen_standard.show();
+            if (use_measure_gauge) gui_gen_measure.show();
             gui_gen.show();
             gui_pattern.show();
             gui_zoomrot.show();
             this.visible = true;
         }
+    }
+
+    update() {
+        // update values
+        if (useTests && !generatedReady) {
+            approximate_real_size = GetActiveTestApproximateRealSize();
+            gui_pattern.prototype.setValue('approximate_real_size', GetActiveTestApproximateRealSize());
+        }
+
+        // if they have been changed by gui
+        ZOOM = zoom;
+        ROTATION.set(rot_x, rot_y, rot_z);
     }
 }
 
@@ -138,7 +151,7 @@ function generateUsingInput() {
 
     if (DEBUG) {
         console.log("generate crochet structure");
-        console.log("use_measure = " + use_measure + " | use_standard = " + use_standard);
+        console.log("use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
         console.log("crochet: " + crochet_type_to_make);
         console.log("input_width_rows: " + input_width_rows);
         console.log("input_length_rows: " + input_length_rows);
@@ -152,15 +165,15 @@ function generateUsingInput() {
         console.log("stitch_type_to_use: " + stitch_type_to_use);
     }
 
-    if (use_measure === true ) {
+    if (use_measure_gauge === true ) {
         generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, input_width_rows, input_length_rows);
     }
-    else if (use_standard === true) {
+    else if (use_standard_gauge === true) {
         generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, hook_size, yarn_weight);
     }
-
+    let stitch_type = GetStitchTypesKeyByValue(stitch_type_to_use);
     let ok = generatedCrochetStructure.GenerateRestrained(min_number_of_rows, max_number_of_rows, 
-        min_stitches_in_a_row, max_stitches_in_a_row, stitches_in_first_row, true, false, true, stitch_type_to_use);
+        min_stitches_in_a_row, max_stitches_in_a_row, stitches_in_first_row, true, false, true, stitch_type);
 
     if (ok === false) {
         console.error("generateUsingInput() something went wrong while generating structure");
@@ -179,18 +192,18 @@ function generateUsingInput() {
 
 function gaugeChange() {
     console.log("change gauge");
-    console.log("BEFORE: use_measure = " + use_measure + " | use_standard = " + use_standard);
-    use_measure = !use_measure;
-    use_standard = !use_standard;
-    if (use_measure === true || use_standard === false) {
+    console.log("BEFORE: use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
+    use_measure_gauge = !use_measure_gauge;
+    use_standard_gauge = !use_standard_gauge;
+    if (use_measure_gauge === true || use_standard_gauge === false) {
         gui_gen_measure.show();
         gui_gen_standard.hide();
     } 
-    else if (use_standard === true || use_measure === false) {
+    else if (use_standard_gauge === true || use_measure_gauge === false) {
         gui_gen_measure.hide();
         gui_gen_standard.show();
     }
-    console.log("AFTER: use_measure = " + use_measure + " | use_standard = " + use_standard);
+    console.log("AFTER: use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
 }
 
 function resetZoomRotGUI() {

@@ -66,6 +66,10 @@ function GetActiveTestApproximateRealSize() {
     return structures[activeTestIdx].GetApproximateRealSize();
 }
 
+function GetActiveTestGaugeInfo() {
+    return structures[activeTestIdx].GetGaugeInfo();
+}
+
 function ActiveTestUpdatePreviousStitches() {
     let a = structures[activeTestIdx].rows.length-1;
     let b = structures[activeTestIdx].rows[a].count-1;

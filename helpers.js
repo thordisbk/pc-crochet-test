@@ -78,20 +78,24 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
     let dateString = CreateDateString();
     console.log("date string: " + dateString);
 
-    let patternString = "";
+    let patternString = "Pattern:\n";
     let approxRealSize = "? cm";
+    let gaugeInfo = "Hook size: ?\nYarn weight:?\n";
     if (useTests) {
         patternString = GetActiveTestPattern();
         approxRealSize = GetActiveTestApproximateRealSize();
+        gaugeInfo = GetActiveTestGaugeInfo();
     } else if (generatedReady) {
         let pattern = new Pattern(generatedCrochetStructure);
         patternString = pattern.patternStr;
         approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+        gaugeInfo = generatedCrochetStructure.GetGaugeInfo();
     } else {
         console.error("SavePatternPDFAndImageFile(): no crochet structure ready");
         return;
     }
     let formattedPattern = FormatPatternString(patternString);
+    let formattedPatternList = formattedPattern.split('\n');
     let realSize = "Approximate real size of crocheted object: " + approxRealSize;
     let creatorStr = "Created using Crochet Patthern Generator by ÞBK (pokr@itu.dk)";
 
@@ -111,10 +115,22 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
     doc.text(creatorStr, xMargin, 30);
     doc.text(dateString, xMargin, 35);
     doc.text(realSize, xMargin, 40);
+    doc.setFontSize(10);
+    doc.text(gaugeInfo, xMargin, 50);
 
     // pattern
     doc.setFontSize(12);
-    doc.text(formattedPattern, xMargin, 50);
+    // doc.text(formattedPattern, xMargin, 60);
+    let yMargin = 65;
+    let linesPerPage = 40;
+    for (let i = 0; i < formattedPatternList.length; i++) {
+        doc.text(formattedPatternList[i], xMargin, yMargin);
+        yMargin += 5;
+        if (i > 0 && i % linesPerPage === 0) {
+            doc.addPage();
+            yMargin = 30;
+        }
+    }
     
     doc.save(fileName + "_pattern.pdf");
 
@@ -132,6 +148,19 @@ function GetRandomStitchType() {
     if (rand == 6) return StitchTypes.SK;
     // if (rand == 7) return StitchTypes.SLKN;
     // if (rand == 8) return StitchTypes.MR;
+    return StitchTypes.NONE;
+}
+
+function GetStitchTypesKeyByValue(str) {
+    if (str === "CH") return StitchTypes.CH;
+    if (str === "SC") return StitchTypes.SC;
+    if (str === "HDC") return StitchTypes.HDC;
+    if (str === "DC") return StitchTypes.DC;
+    if (str === "TR") return StitchTypes.TR;
+    if (str === "SLST") return StitchTypes.SLST;
+    if (str === "SK") return StitchTypes.SK;
+    // if (str === "SLKN") return StitchTypes.SLKN;
+    // if (str === "MR") return StitchTypes.MR;
     return StitchTypes.NONE;
 }
 
