@@ -62,13 +62,13 @@ class GUI {
 
         if (gauge == 'standard') {
             gui.addGlobals('hook_size', 'yarn_weight');
-            gui.addButton('use_measure_gauge', function() {
+            gui.addButton('Use measure gauge instead', function() {
                 gaugeChange();
             });
         }
         else if (gauge == 'measure') {
             gui.addGlobals('input_length_rows', 'input_width_rows');
-            gui.addButton('use_standard_gauge', function() {
+            gui.addButton('Use standard gauge instead', function() {
                 gaugeChange();
             });
         }
@@ -88,7 +88,7 @@ class GUI {
         sliderRange(0, 300, 1);
         gui.addGlobals('min_stitches_in_a_row', 'max_stitches_in_a_row');
         gui.addGlobals('crochet_type_to_make');
-        gui.addButton("GENERATE", function() {
+        gui.addButton("Generate", function() {
             generateUsingInput();
         });
         return gui;
@@ -150,19 +150,19 @@ function generateUsingInput() {
     noLoop();
 
     if (DEBUG) {
-        console.log("generate crochet structure");
-        console.log("use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
-        console.log("crochet: " + crochet_type_to_make);
-        console.log("input_width_rows: " + input_width_rows);
-        console.log("input_length_rows: " + input_length_rows);
-        console.log("hook_size: " + hook_size);
-        console.log("yarn_weight: " + yarn_weight);
-        console.log("min_number_of_rows: " + min_number_of_rows);
-        console.log("max_number_of_rows: " + max_number_of_rows);
-        console.log("min_stitches_in_a_row: " + min_stitches_in_a_row);
-        console.log("max_stitches_in_a_row: " + max_stitches_in_a_row);
-        console.log("stitches_in_first_row: " + stitches_in_first_row);
-        console.log("stitch_type_to_use: " + stitch_type_to_use);
+        console.log("generate crochet structure"
+         + "\nuse_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge
+         + "\ncrochet: " + crochet_type_to_make
+         + "\ninput_width_rows: " + input_width_rows
+         + "\ninput_length_rows: " + input_length_rows
+         + "\nhook_size: " + hook_size
+         + "\nyarn_weight: " + yarn_weight
+         + "\nmin_number_of_rows: " + min_number_of_rows
+         + "\nmax_number_of_rows: " + max_number_of_rows
+         + "\nmin_stitches_in_a_row: " + min_stitches_in_a_row
+         + "\nmax_stitches_in_a_row: " + max_stitches_in_a_row
+         + "\nstitches_in_first_row: " + stitches_in_first_row
+         + "\nstitch_type_to_use: " + stitch_type_to_use);
     }
 
     if (use_measure_gauge === true ) {
@@ -191,8 +191,6 @@ function generateUsingInput() {
 }
 
 function gaugeChange() {
-    console.log("change gauge");
-    console.log("BEFORE: use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
     use_measure_gauge = !use_measure_gauge;
     use_standard_gauge = !use_standard_gauge;
     if (use_measure_gauge === true || use_standard_gauge === false) {
@@ -203,7 +201,6 @@ function gaugeChange() {
         gui_gen_measure.hide();
         gui_gen_standard.show();
     }
-    console.log("AFTER: use_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge);
 }
 
 function resetZoomRotGUI() {

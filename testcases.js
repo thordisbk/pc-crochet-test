@@ -14,17 +14,14 @@ function createTests() {
         if (active[i] == 0) 
             continue;
         crochetStructure.SetupTest(i);
-        console.log("test " + i + ": " + crochetStructure.csName + "\n");
         let pattern = new Pattern(crochetStructure);
-        console.log("\n" + pattern.patternStr + "\n");
+        if (VERBOSE || DEBUG) console.log("test " + i + ": " + crochetStructure.csName + "\n" + pattern.patternStr);
     }
-    console.log("tests created");
-    console.log(structures);
 }
 
 function NextTest() {
     activeTestIdx = (activeTestIdx + 1) % MAX_TESTS;
-    console.log("active test:", activeTestIdx, "\n");
+    if (VERBOSE || DEBUG) console.log("active test:", activeTestIdx, "\n");
 
     ResetRotZoom();
 }
@@ -173,7 +170,6 @@ function SetupFlatCircle(firstStitch, numStitchesInFirstRow, numOfRows, type) {
     rowCount++;
 
     for (; rowCount < numOfRows; rowCount++) {
-        console.log("create row: " + rowCount);
         let numStitchesInCurrRow = numStitchesInFirstRow * (rowCount-1);  // should increase by 
         let currRowStitches = [];
         // currRowStitches = [];
@@ -654,7 +650,7 @@ function SetupCylindrical(firstStitch) {
                 else {
                     currRowStitches = InitStitchSingle(currRowStitches, currRowStitches[currRowStitches.length-1], null, currType);
                 }
-                console.log("Init stitch " + currType + " | r = " + r);
+                // console.log("Init stitch " + currType + " | r = " + r);
             }
             rows.push(new Row(currRowStitches, cType));
         }

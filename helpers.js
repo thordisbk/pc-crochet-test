@@ -67,6 +67,7 @@ function isInteger(str) {
 }
 
 function isFloat(str) {
+    console.log("is " + str + " a float?");
     return Number(str) === str && str % 1 !== 0;
 }
 
@@ -162,6 +163,10 @@ function GetStitchTypesKeyByValue(str) {
     // if (str === "SLKN") return StitchTypes.SLKN;
     // if (str === "MR") return StitchTypes.MR;
     return StitchTypes.NONE;
+}
+
+function CompareToStitchType() {
+    // TODO
 }
 
 function CreateDateString() {

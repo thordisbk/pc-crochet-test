@@ -193,9 +193,9 @@ class Stitch {
         if (!useVertexStitchColors)
             return createVector(255, 255, 255);
 
-        if (this.stitchType == StitchTypes.CH)
+        if (this.stitchType === StitchTypes.CH)
             return createVector(255, 0, 0);
-        else if (this.stitchType == StitchTypes.SC)
+        else if (this.stitchType === StitchTypes.SC)
             return createVector(0, 255, 0);
         else if (this.stitchType == StitchTypes.HDC)
             return createVector(0, 0, 255);
@@ -215,6 +215,10 @@ class Stitch {
             return createVector(255, 255, 255);
 
         return createVector(255, 255, 255);
+    }
+
+    GetLineColor() {
+
     }
 
     SetPosition(newPos) {

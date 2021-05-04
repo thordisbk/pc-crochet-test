@@ -10,7 +10,6 @@ class Pattern {
         this.condenseStitches = true;
         this.checkForIncreases = true;
 
-        if (VERBOSE) console.log("Pattern::Pattern\n");
         this.crochetStructure = cs;
         this.patternStr = "Pattern:\n";
         let rowCounter = 0;

@@ -32,14 +32,16 @@ class CrochetStructure {
 
 
     constructor(val1, val2, val3) {
-        if (isFloat(val2) && isFloat(val3))
+        if (!isNaN(val2) && !isNaN(val3)) {
             this.CrochetStructure2(val1, val2, val3);
-        else
+        } else {
             this.CrochetStructure1(val1, val2, val3);
+        }
     }
 
     CrochetStructure1(ct, hs, yw) {
         // hs and yw are consts
+        console.log("Make crochet structure using standard hook and yarn");
         this.crochetType = ct;
         this.hookSize = hs;
         this.yarnWeight = yw;
@@ -53,6 +55,7 @@ class CrochetStructure {
 
     CrochetStructure2(ct, wid10x10, len10x10) {
         // wid10x10 and len10x10 are given in cm as floats
+        console.log("Make crochet structure using measure gauge");
         this.crochetType = ct;
         this.hookSize = 0.0;
         this.yarnWeight = null;
@@ -299,17 +302,14 @@ class CrochetStructure {
                     let prob = random(0, 1);
                     // console.log(prob);
                     if (prob > 0.8 && stitchesInCurrRow < maxStitches) {  // do and increase
-                        console.log("- make INC");
                         currRowStitches = InitStitchInc(currRowStitches, prevStitch, ontoStitch, currType);
                         stitchesInCurrRow++;
                     } else if (prob > 0.7 && stitchesInCurrRow > minStitches && enableDec && s < stitchesInPrevRow-1) { 
-                        console.log("- make DEC");
                         currRowStitches = InitStitchDec(currRowStitches, prevStitch, ontoStitch, ontoStitch.nextStitch, currType);
                         ontoStitch = ontoStitch.nextStitch;
                         stitchesInCurrRow--;
                         s++;
                     } else {
-                        console.log("- make REG");
                         currRowStitches = InitStitchSingle(currRowStitches, prevStitch, ontoStitch, currType);
                     }
                     prevStitch = currRowStitches[currRowStitches.length-1];
@@ -455,7 +455,7 @@ class CrochetStructure {
             this.totalStitches += this.rows[r].count;
         }
 
-        console.log("CrochetType = " + this.crochetType);
+        if (VERBOSE) console.log("CrochetType = " + this.crochetType);
         if (this.crochetType == CrochetType.CIRCULAR) this.ApplyTension();
         else this.PositionOneStitchThenActivateSprings();
         // PositionOneStitchThenActivateSprings();
@@ -613,15 +613,14 @@ class CrochetStructure {
     }
 
     ApplyTension() {
-        let printStuff = false;
         // change positions of stitches to accommodate the tension and number of stitches in a row
         let zAdd = 1.0 * stitchLengthMultiplier, zPrev = 0.0;
         let counter = 0;
         for (let r = 0; r < this.rows.length; r++) {
             let row = this.rows[r];
             let stitchWidth = 1.0;
-            if (printStuff) console.log("\n ----------------------------");
-            if (printStuff) console.log("\nROW: " + counter);
+            if (VERBOSE) console.log("\n ----------------------------");
+            if (VERBOSE) console.log("\nROW: " + counter);
 
             // distribute stitches evenly around the first stitch in the first row
             // move each stitch closer to its ontoStitch, until the length between them is equal to stitch.length
@@ -631,7 +630,7 @@ class CrochetStructure {
             let actualCircumference = row.GetRowCircumferenceActual(true);
             let desiredCircumference = row.GetRowCircumferenceDesired();
 
-            if (printStuff) console.log("BEFORE: circumference | actual = " + actualCircumference + " | desired = " + desiredCircumference);
+            if (VERBOSE) console.log("BEFORE: circumference | actual = " + actualCircumference + " | desired = " + desiredCircumference);
             let ratioCirc = desiredCircumference / actualCircumference;
             let diff = abs(desiredCircumference - actualCircumference);
             // console.log("- Difference: " + diff);
@@ -639,7 +638,7 @@ class CrochetStructure {
             // if (counter > 3) return;
             if (actualCircumference > desiredCircumference) {  // && (counter > 1)) {
                 // TODO there could be cuffing, since the circumference is less that a circle's circumference
-                if (printStuff) console.log("CUPP ?");
+                if (VERBOSE) console.log("CUPP ?");
 
                 let currStitchLength = row.stitches[0].length;
                 // let pos1 = row.stitches[0].GetPosition();
@@ -649,7 +648,7 @@ class CrochetStructure {
                 // TODO it is not always the case that every red edge is the same length
 
                 for (let s = 0; s < row.count; s++) { // for (Stitch stitch : row.stitches) {
-                    if (printStuff && counter > 3) console.log("\nOn stitch ...");
+                    if (VERBOSE && counter > 3) console.log("\nOn stitch ...");
                     // find stitchVector (vector from ontoStitch to currStitch)
                     let stitch = row.stitches[s];
                     let stitchVector = createVector();  // from zero to position vector
@@ -680,17 +679,17 @@ class CrochetStructure {
                     //  as the radius doubles when the circumference doubbles, the radius will become redEdgeRatio % of what is was
                     // let newRad = currRad * redEdgeRatio;
                     let newRad = currRad * (desiredCircumference / actualCircumference);
-                    if (printStuff) console.log("- currRad: " + currRad + " | newRad: " + newRad + " | prevRad: " + prevRad);
+                    if (VERBOSE) console.log("- currRad: " + currRad + " | newRad: " + newRad + " | prevRad: " + prevRad);
 
                     let stitchCurrLen = currRad - prevRad;
-                    if (printStuff) console.log("- stitchCurrLen = " + stitchCurrLen);
+                    if (VERBOSE) console.log("- stitchCurrLen = " + stitchCurrLen);
                     // NEW
                     ratioCirc = desiredCircumference / actualCircumference;
                     // we want the actualCircumference to be ratioCirc of what is currently is
                     // same goes for radius: we want it to become ratioCirc of what it currently is
                     // since we cannot change prevRad, we must change newRad
                     let desiredStitchLen = (newRad - prevRad) / stitchLengthMultiplier;
-                    if (printStuff) console.log("- desiredStitchLen = " + desiredStitchLen);
+                    if (VERBOSE) console.log("- desiredStitchLen = " + desiredStitchLen);
 
                     // cannot adjust rad in previous rows, only current, so current stitch length becomes
                     let v1 = (newRad % stitchLengthMultiplier) / stitchLengthMultiplier;
@@ -698,7 +697,7 @@ class CrochetStructure {
                     // let newStitchLen = (v1 >= v2) ? v1 - v2 : 1.0 + v2 - v1;
                     let newStitchLen = v1 - v2;
                     newStitchLen = desiredStitchLen;
-                    if (printStuff) console.log("- newStitchLen = " + newStitchLen);
+                    if (VERBOSE) console.log("- newStitchLen = " + newStitchLen);
 
                     // store the old position for printing
                     let oldStitchPos = stitch.GetPosition();
@@ -720,8 +719,8 @@ class CrochetStructure {
 
                     // checks
                     let newLen = (stitch.GetPosition().dist(stitch.ontoStitch.GetPosition()) / 30.0);
-                    if (!AreAlmostEqual(newLen, stitch.length)) console.log("ALMOST: stitch length is " + newLen + " but should be " + stitch.length);
-                    if (printStuff) console.log("- old pos: " + oldStitchPos + " | new pos: " + newStitchPos + " | length = " + newLen);
+                    if (VERBOSE && !AreAlmostEqual(newLen, stitch.length)) console.log("ALMOST: stitch length is " + newLen + " but should be " + stitch.length);
+                    if (VERBOSE) console.log("- old pos: " + oldStitchPos + " | new pos: " + newStitchPos + " | length = " + newLen);
                 }
 
                 // TODO e.g. if stitches cannot be moved inwards untill each red edge == 1.0, 
@@ -729,18 +728,18 @@ class CrochetStructure {
                 //  then stop .....
             } else if (actualCircumference < desiredCircumference) {
                 // TODO there could be ruffling, since the circumference is greater that a circle's circumference
-                if (printStuff) console.log("RUFF ?");
+                if (VERBOSE) console.log("RUFF ?");
 
                 // skip first row
                 if (counter == 0) {
-                    if (printStuff) console.log("\nSkip first row");  // TODO don't skip?
+                    if (VERBOSE) console.log("\nSkip first row");  // TODO don't skip?
                     continue;
                 }
 
                 let even = (row.count % 2) == 0 ? true : false;
                 let sign = 1;
                 for (let i = 0; i < row.count; i++) {
-                    if (printStuff) console.log("\nOn stitch ...");
+                    if (VERBOSE) console.log("\nOn stitch ...");
                     let currIdx = i;
                     let prevIdx = (i > 0) ? i-1 : row.count-1;
 
@@ -767,7 +766,7 @@ class CrochetStructure {
                     row.stitches[currIdx].SetPosition(posCurrNew);
 
                     let currLen = row.stitches[currIdx].GetPosition().dist(row.stitches[currIdx].ontoStitch.GetPosition());
-                    if (printStuff) console.log("- curr len = " + currLen);
+                    if (VERBOSE) console.log("- curr len = " + currLen);
                     sign *= -1;
                 }
             } else {
@@ -780,7 +779,7 @@ class CrochetStructure {
 
             let tempV = createVector(row.stitches[0].GetPosition().x, row.stitches[0].GetPosition().y, 0);
             let newRadius = tempV.dist(createVector(0, 0, 0));
-            if (printStuff) console.log("AFTER: circumference | actual = " + newActualCirc + " | desired = " + desiredCircumference);
+            if (VERBOSE) console.log("AFTER: circumference | actual = " + newActualCirc + " | desired = " + desiredCircumference);
 
             counter++;
         }
@@ -1071,9 +1070,11 @@ class CrochetStructure {
         let res = "";
 
         if (this.gauge === "standard") {
-            res = `Hook size: ${this.hookSize}\nYarn weight: ${this.yarnWeight}\n`;
+            res += `Hook size: ${this.hookSize}\n`;
+            res += `Yarn weight: ${this.yarnWeight}\n`;
         } else if (this.gauge === "measure") {
-            res = `10x10`;
+            res += `Made using a gauge: 10x10 SC were measured as ${this.tensionLength * 10.0}x${this.tensionWidth * 10.0} cm.\n`;
+            res += `Use same hook and yarn as used for gauge.\n`;
         } else {
             console.warn("GetGaugeInfo(): gauge string not set");
         }

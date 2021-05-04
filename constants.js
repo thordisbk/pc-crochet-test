@@ -53,6 +53,19 @@ const STITCH_TYPES = [ "SC", "HDC", "DC", "TR" ];
 //
 
 const StitchTypes = {
+    CH: 'CH',
+    SC: 'SC',
+    HDC: 'HDC',
+    DC: 'DC',
+    TR: 'TR',
+    SLST: 'SLST',
+    SK: 'SK',
+    SLKN: 'SLKN',  // slip knot
+    MR: 'MR',  // magic ring
+    NONE: 'NONE'
+}
+
+const StitchTypesStrings = {
     CH: 'chain',
     SC: 'single stitch',
     HDC: 'half-double stitch',

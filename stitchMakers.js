@@ -1,7 +1,11 @@
 // functions for creating different stitches
 // they use the current row and return it modified
 
-// functions for creating: single stitch, increase, decrease, ...
+// single stitch, increase, decrease, ...
+// TODO
+// skip stitch: CH 1, skip ontoStitch and make SC/HDC/DC/TR in ontoStitch.nextStitch
+// picot: CH 3, SLST into 2nd CH from hook
+// etc ...
 
 function InitStitchSingle(rowStitches, prevStitch, ontoStitch, type) {
     let currStitch = new Stitch(type, StitchDescription.REGULAR, prevStitch, ontoStitch);
