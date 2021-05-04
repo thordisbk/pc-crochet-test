@@ -22,6 +22,7 @@ let generatedReady;
 let generatedCrochetStructure;
 
 let springColor;
+let springNonColor;
 
 // keyboard, set to false
 let X_PRESSED;
@@ -42,6 +43,13 @@ function InitializeGlobals() {
     generatedReady = false;
 
     springColor = createVector(255, 0, 0);
+    springNonColor = createVector(0, 255, 0);
+
+    if (!DEBUG) {
+        springColor = createVector(129, 113, 122);  // FIXME
+        springNonColor = createVector(189, 179, 185);  // FIXME
+        useTests = false;
+    }
 
     X_PRESSED = false;
     Y_PRESSED = false;

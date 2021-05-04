@@ -190,6 +190,8 @@ class Stitch {
     }
 
     GetStitchColor() {
+        if (!DEBUG) return createVector(98, 85, 93);  // FIXME
+
         if (!useVertexStitchColors)
             return createVector(255, 255, 255);
 

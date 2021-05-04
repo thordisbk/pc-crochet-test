@@ -41,13 +41,13 @@ class Row {
                 if (firstStitch.nextStitch != null && firstStitch.nextStitch.node != lastStitch.node && notJustStart) {
                     lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.nextStitch.node, 
                                     lastStitch.width * stitchLengthMultiplier, DAMP_default, k_SPRINGCONST_default, 
-                                    createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
+                                    springNonColor, true));  // notASpring = true as this edge should not be a spring
                 }
             } else {
                 // if not only CH, connect lastStitch to first stitch
                 lastStitch.springs.push(new Spring(lastStitch.node, firstStitch.node, 
                                     lastStitch.width * stitchLengthMultiplier, DAMP_default, k_SPRINGCONST_default, 
-                                    createVector(0, 255, 0), true));  // notASpring = true as this edge should not be a spring
+                                    springNonColor, true));  // notASpring = true as this edge should not be a spring
             }
 
 

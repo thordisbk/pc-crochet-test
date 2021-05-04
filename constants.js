@@ -15,7 +15,7 @@ const HEIGHT = 600;
 const VERBOSE = false;
 
 // 'true' shows the debug GUI
-const DEBUG = true;
+const DEBUG = false;
 // debug colors for vertices and stitches
 const useVertexStitchColors = true;
 
