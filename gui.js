@@ -6,8 +6,8 @@ var hook_size = HOOK_SIZES;
 
 var use_measure_gauge = true;
 var use_standard_gauge = true;
-var input_length_rows = "10";
-var input_width_rows = "10";
+var input_length_rows_cm = "10";
+var input_width_rows_cm = "10";
 
 var stitch_type_to_use = ["SC"]; // STITCH_TYPES;
 var stitches_in_first_row = 0;
@@ -47,8 +47,12 @@ class GUI {
         colorMode(RGB);  // HSB
         gui_gen_standard = this.createGUIgenGauge('standard');
         gui_gen_measure = this.createGUIgenGauge('measure');
-        gui_gen_measure.hide();
-        use_measure_gauge = false;
+
+        // gui_gen_measure.hide();
+        // use_measure_gauge = false;
+
+        gui_gen_standard.hide();
+        use_standard_gauge = false;
 
         gui_gen = this.createGUIparam();
         gui_pattern = this.createGUIpattern();
@@ -69,7 +73,7 @@ class GUI {
             });
         }
         else if (gauge == 'measure') {
-            gui.addGlobals('input_length_rows', 'input_width_rows');
+            gui.addGlobals('input_length_rows_cm', 'input_width_rows_cm');
             gui.addButton('Use standard gauge instead', function() {
                 gaugeChange();
             });
@@ -118,7 +122,7 @@ class GUI {
     }
 
     createGUIsprings() {
-        let gui = createGui('Adjust structure').setPosition(width - 210, 480);
+        let gui = createGui('Adjust structure').setPosition(width - 210, 485);
         gui.addButton("Activate springs", function() {
             UpdateSpringsOfActiveStructure();
         });
@@ -132,6 +136,7 @@ class GUI {
             gui_gen.hide();
             gui_pattern.hide();
             gui_zoomrot.hide();
+            gui_springs.hide();
             this.visible = false;
         } else {
             if (use_standard_gauge) gui_gen_standard.show();
@@ -139,6 +144,7 @@ class GUI {
             gui_gen.show();
             gui_pattern.show();
             gui_zoomrot.show();
+            gui_springs.show();
             this.visible = true;
         }
     }
@@ -163,8 +169,8 @@ function generateUsingInput() {
         console.log("generate crochet structure"
          + "\nuse_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge
          + "\ncrochet: " + crochet_type_to_make
-         + "\ninput_width_rows: " + input_width_rows
-         + "\ninput_length_rows: " + input_length_rows
+         + "\ninput_width_rows_cm: " + input_width_rows_cm
+         + "\ninput_length_rows_cm: " + input_length_rows_cm
          + "\nhook_size: " + hook_size
          + "\nyarn_weight: " + yarn_weight
          + "\nmin_number_of_rows: " + min_number_of_rows
@@ -176,7 +182,7 @@ function generateUsingInput() {
     }
 
     if (use_measure_gauge === true ) {
-        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, input_width_rows, input_length_rows);
+        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, input_width_rows_cm, input_length_rows_cm);
     }
     else if (use_standard_gauge === true) {
         generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, hook_size, yarn_weight);
