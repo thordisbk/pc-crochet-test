@@ -144,7 +144,7 @@ function UpdateSpringsOfActiveStructure() {
     if (!useTests && generatedReady) {
         generatedCrochetStructure.UpdatePreviousStitches(generatedCrochetStructure.rows.length-1, 
             generatedCrochetStructure.rows[generatedCrochetStructure.rows.length-1].count-1, 1000, true);
-    } else {
+    } else if (useTests) {
         ActiveTestUpdatePreviousStitches();
     }
 }
@@ -356,4 +356,21 @@ function NormalizeStitchesInCircularRow(row) {  // same as NormalizeStitchLength
             // if (!AreAlmostEqual(len, stitch.length)) console.log(("ALMOST: stitch length is " + len + " but should be " + stitch.length + " (was " + lenPrev + ")");
         }
     }
+}
+
+function FindTensionWidthLength(hooksize, yarnweight) {
+    // using hooksize and yarnweight, find tensionLength and tensionWidth
+    let obj = {len: 1.0, wid: 1.0};
+
+    // bigger hook size will create more space between stitches -> increasing the gauge
+    // smaller hook size will create less space between stitches -> decreasing the gauge
+
+    // larger yarn weight will increase gauge
+    // smaller yarn weight will decrease gauge
+
+    // the middle ground for tension is with hook size 5 mm and yarn weight medium 
+
+
+
+    return obj;
 }

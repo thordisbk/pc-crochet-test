@@ -3,8 +3,8 @@
 const { jsPDF } = window.jspdf
 
 // integers
-const MAX_let = 2147483647;
-const MIN_let = -2147483648;
+const MAX_int = 2147483647;
+const MIN_int = -2147483648;
 
 // window size
 const WIDTH = 800;
@@ -20,13 +20,6 @@ const DEBUG = false;
 const useVertexStitchColors = true;
 
 const MAX_TESTS = 13;
-
-// in CrochetStructure, for visualization purposes; how far to position vertices from each other TODO add movable perspective
-let stitchLengthMultiplier = 30;
-let stitchWidthMultiplier = 30;
-
-// size of sphere vertex representation
-const sphereRadius = 5;
 
 // in CrochetStructure, if true: fix positions using the center most stitch; if false: use the ontoStitch instead
 // let useOriginStitchForCentering = true;

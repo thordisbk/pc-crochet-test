@@ -46,9 +46,15 @@ class CrochetStructure {
         this.hookSize = hs;
         this.yarnWeight = yw;
         this.gauge = "standard";
-        // TODO since hook and yarn were given instead of the sizes of a gauge, find the standard tension
-        this.tensionLength = 1.0;
-        this.tensionWidth = 1.0;
+        
+        // since hook and yarn were given instead of the sizes of a gauge, find the standard tension
+        let obj = FindTensionWidthLength(hs, yw);
+        this.tensionLength = obj.len;
+        this.tensionWidth = obj.wid;
+
+        // update globals
+        sphereRadius = 5;
+        strokeThickness = 3.0;
 
         this.InitializeVars();
     }
@@ -63,6 +69,10 @@ class CrochetStructure {
         this.tensionWidth = wid10x10 / 10.0;
         this.gauge = "measure";
 
+        // update globals
+        sphereRadius = 5;
+        strokeThickness = 3.0;
+
         this.InitializeVars();
     }
 
@@ -70,6 +80,7 @@ class CrochetStructure {
         // FIXME
         stitchWidthMultiplier = 30 * this.tensionWidth;
         stitchLengthMultiplier = 30 * this.tensionLength;    
+        console.log("tensionLength: " + this.tensionLength + " | tensionWidth: " + this.tensionWidth);
         
         this.useOriginStitchForCentering = true;  
         this.usingTest = false; 
@@ -188,9 +199,9 @@ class CrochetStructure {
     Generate() {
         // call GenerateRestrained with no restralets
         let minRows = 0;
-        let maxRows = MAX_let;
+        let maxRows = MAX_int;
         let minStitches = 1;
-        let maxStitches = MAX_let;
+        let maxStitches = MAX_int;
         let numStitchesFirstRow = 5;
         let sameStitch = false;
         let sType = StitchTypes.NONE;

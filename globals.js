@@ -10,9 +10,10 @@ function ResetRotZoom() {
     ZOOM = 1.0;
 }
 
-// canvas ref
+// canvas
 let cnv;
 
+// gui
 let gui;
 
 // 'true' uses the tests from testcased.pde, set to false when a structure is generated via gui
@@ -23,6 +24,15 @@ let generatedCrochetStructure;
 
 let springColor;
 let springNonColor;
+
+// for visualization; how far to position vertices from each other
+let stitchLengthMultiplier = 30;
+let stitchWidthMultiplier = 30;
+
+// size of sphere vertex representation
+let sphereRadius = 5;
+// thickness of yarn
+let strokeThickness = 3.0;
 
 // keyboard, set to false
 let X_PRESSED;

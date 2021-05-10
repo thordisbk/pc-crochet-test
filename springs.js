@@ -133,7 +133,6 @@ class Spring {
     // let acceleration = 0;    // Acceleration
     // let force = 0;    // Force
 
-    // let strokeThickness = 3.0;
     // boolean bounceAtStart = false;
 
     // PVector col;
@@ -145,7 +144,6 @@ class Spring {
     constructor(n1, n2, rd, d, k_const, c, notASpring) {
 
         this.bounceAtStart = false;
-        this.strokeThickness = 3.0;
         this.acceleration = 0;
         this.force = 0;
         this.isSpring = true;
@@ -234,7 +232,7 @@ class Spring {
         rotateZ(radians(ROTATION.z));
 
         // strokeWeight(strokeW * strokeThickness);
-        strokeWeight(strokeW * this.strokeThickness * ZOOM);
+        strokeWeight(strokeW * strokeThickness * ZOOM);
         stroke(this.col.x, this.col.y, this.col.z, 255);
         
         let zoomNodeA = p5.Vector.mult(this.nodeA.pos, ZOOM);

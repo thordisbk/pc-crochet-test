@@ -124,7 +124,7 @@ class GUI {
     createGUIsprings() {
         let gui = createGui('Adjust structure').setPosition(width - 210, 485);
         gui.addButton("Activate springs", function() {
-            UpdateSpringsOfActiveStructure();
+            ActivateSpringsButton();
         });
         return gui;
     }
@@ -160,6 +160,18 @@ class GUI {
         ZOOM = zoom;
         ROTATION.set(rot_x, rot_y, rot_z);
     }
+}
+
+function ActivateSpringsButton() {
+    if (!generatedReady) {
+        return;
+    }
+
+    UpdateSpringsOfActiveStructure();
+    // find new approximate size
+    let approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    approximate_real_size = approxRealSize;
+    gui_pattern.prototype.setValue('approximate_real_size', approxRealSize);
 }
 
 function generateUsingInput() {
