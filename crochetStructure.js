@@ -82,6 +82,7 @@ class CrochetStructure {
         stitchLengthMultiplier = 30 * this.tensionLength;    
         console.log("tensionLength: " + this.tensionLength + " | tensionWidth: " + this.tensionWidth);
         
+        this.totalStitches = 0;
         this.useOriginStitchForCentering = true;  
         this.usingTest = false; 
         this.showVisualPoints = false;     
