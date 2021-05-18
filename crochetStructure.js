@@ -52,9 +52,9 @@ class CrochetStructure {
         this.tensionLength = obj.len;
         this.tensionWidth = obj.wid;
 
-        // update globals
-        sphereRadius = 5;
-        strokeThickness = 3.0;
+        // update globals     (tensionLength and tensionWidth should be equal)
+        sphereRadius = ConvertValueToNewRange(this.tensionLength, TENSION_MIN, TENSION_MAX, 2.5, 7.5); // 5
+        strokeThickness = ConvertValueToNewRange(this.tensionWidth, TENSION_MIN, TENSION_MAX, 1.0, 5.0);  // 3.0
 
         this.InitializeVars();
     }
@@ -80,7 +80,7 @@ class CrochetStructure {
         // FIXME
         stitchWidthMultiplier = 30 * this.tensionWidth;
         stitchLengthMultiplier = 30 * this.tensionLength;    
-        console.log("tensionLength: " + this.tensionLength + " | tensionWidth: " + this.tensionWidth);
+        // console.log("tensionLength: " + this.tensionLength + " | tensionWidth: " + this.tensionWidth);
         
         this.totalStitches = 0;
         this.useOriginStitchForCentering = true;  
@@ -160,29 +160,29 @@ class CrochetStructure {
             pop();
         }*/
 
-        if (this.showVisualPoints) {
-            let counterVP = 0;
-            for (let i = 0; i < this.visualPoints.length; i++) {
-                let vp = this.visualPoints[i];
-                counterVP++;
+        // if (this.showVisualPoints) {
+        //     let counterVP = 0;
+        //     for (let i = 0; i < this.visualPoints.length; i++) {
+        //         let vp = this.visualPoints[i];
+        //         counterVP++;
 
-                noStroke();
-                if (counterVP % 2 == 0) fill(0);
-                else fill(255);
+        //         noStroke();
+        //         if (counterVP % 2 == 0) fill(0);
+        //         else fill(255);
 
-                push();
-                rotateX(radians(ROTATION.x));
-                rotateY(radians(ROTATION.y));
-                rotateZ(radians(ROTATION.z));
+        //         push();
+        //         rotateX(radians(ROTATION.x));
+        //         rotateY(radians(ROTATION.y));
+        //         rotateZ(radians(ROTATION.z));
 
-                let zoomPos = p5.Vector.mult(vp, ZOOM);
-                translate(zoomPos.x, zoomPos.y, zoomPos.z);
-                scale(ZOOM, ZOOM, ZOOM);
+        //         let zoomPos = p5.Vector.mult(vp, ZOOM);
+        //         translate(zoomPos.x, zoomPos.y, zoomPos.z);
+        //         scale(ZOOM, ZOOM, ZOOM);
 
-                sphere(sphereRadius/2);
-                pop();
-            }
-        }
+        //         sphere(sphereRadius/2);
+        //         pop();
+        //     }
+        // }
     }
 
     // PressNodes() {

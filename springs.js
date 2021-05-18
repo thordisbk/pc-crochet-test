@@ -96,16 +96,19 @@ class Node {
         // console.log("node pos: " + pos + "\n");
 
         push();
-        rotateX(radians(ROTATION.x));
-        rotateY(radians(ROTATION.y));
-        rotateZ(radians(ROTATION.z));
+        if (ROTATION.x != 0) rotateX(radians(ROTATION.x));
+        if (ROTATION.y != 0) rotateY(radians(ROTATION.y));
+        if (ROTATION.z != 0) rotateZ(radians(ROTATION.z));
 
-        let zoomPos = p5.Vector.mult(this.pos, ZOOM);
-        translate(zoomPos.x, zoomPos.y, zoomPos.z);
-        // translate(pos.x * ZOOM, pos.y * ZOOM, pos.z * ZOOM);
-        scale(ZOOM, ZOOM, ZOOM);
+        if (ZOOM === 1.0) {
+            translate(this.pos.x, this.pos.y, this.pos.z);
+        } 
+        else {
+            let zoomPos = p5.Vector.mult(this.pos, ZOOM);
+            translate(zoomPos.x, zoomPos.y, zoomPos.z);
+            scale(ZOOM, ZOOM, ZOOM);
+        }
 
-        // translate(pos.x, pos.y, pos.z);
         sphere(this.radius);
         pop();
     }
@@ -227,17 +230,30 @@ class Spring {
         let strokeW = this.rest_dist / this.nodeA.pos.dist(this.nodeB.pos);
 
         push();
-        rotateX(radians(ROTATION.x));
-        rotateY(radians(ROTATION.y));
-        rotateZ(radians(ROTATION.z));
+        if (ROTATION.x != 0) rotateX(radians(ROTATION.x));
+        if (ROTATION.y != 0) rotateY(radians(ROTATION.y));
+        if (ROTATION.z != 0) rotateZ(radians(ROTATION.z));
+
+        stroke(this.col.x, this.col.y, this.col.z, 255);
+
+        if (ZOOM === 1.0) {
+            strokeWeight(strokeW * strokeThickness);
+            line(this.nodeA.pos.x, this.nodeA.pos.y, this.nodeA.pos.z, this.nodeB.pos.x, this.nodeB.pos.y, this.nodeB.pos.z);
+        } 
+        else {
+            strokeWeight(strokeW * strokeThickness * ZOOM);            
+            let zoomNodeA = p5.Vector.mult(this.nodeA.pos, ZOOM);
+            let zoomNodeB = p5.Vector.mult(this.nodeB.pos, ZOOM);
+            line(zoomNodeA.x, zoomNodeA.y, zoomNodeA.z, zoomNodeB.x, zoomNodeB.y, zoomNodeB.z);
+        }
 
         // strokeWeight(strokeW * strokeThickness);
-        strokeWeight(strokeW * strokeThickness * ZOOM);
+        /*strokeWeight(strokeW * strokeThickness * ZOOM);
         stroke(this.col.x, this.col.y, this.col.z, 255);
         
         let zoomNodeA = p5.Vector.mult(this.nodeA.pos, ZOOM);
         let zoomNodeB = p5.Vector.mult(this.nodeB.pos, ZOOM);
-        line(zoomNodeA.x, zoomNodeA.y, zoomNodeA.z, zoomNodeB.x, zoomNodeB.y, zoomNodeB.z);
+        line(zoomNodeA.x, zoomNodeA.y, zoomNodeA.z, zoomNodeB.x, zoomNodeB.y, zoomNodeB.z);*/
         // line(nodeA.pos.x * ZOOM, nodeA.pos.y * ZOOM, nodeA.pos.z * ZOOM, nodeB.pos.x * ZOOM, nodeB.pos.y * ZOOM, nodeB.pos.z * ZOOM);
         // line(nodeA.pos.x, nodeA.pos.y, nodeA.pos.z, nodeB.pos.x, nodeB.pos.y, nodeB.pos.z);
         strokeWeight(1);

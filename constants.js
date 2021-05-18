@@ -37,10 +37,14 @@ const backgroundColor = 230;  // 50;
 
 // let errorMargin = 0.0000001
 
+// tension range
+const TENSION_MIN = 0.6;
+const TENSION_MAX = 1.4;
+
 const YARN_WEIGHTS = [ "lace", "super fine", "fine", "light", "medium", "bulky", "super bulky", "jumbo" ];
 const HOOK_SIZES = [ "2.0 mm", "2.25 mm", "2.5 mm", "2.75 mm", "3.0 mm", "3.25 mm", "3.5 mm", "3.75 mm", "4.0 mm", 
                         "4.25 mm", "4.5 mm", "5.0 mm", "5.5 mm", "6.0 mm", "6.5 mm", "7.0 mm", "7.5 mm", "8.0 mm", 
-                        "9.0 mm", "10 mm", "12 mm", "15 mm", "16 mm", "19 mm", "25 mm", "35 mm" ];
+                        "9.0 mm", "10 mm", "12 mm"]; //, "15 mm", "16 mm", "19 mm", "25 mm", "35 mm" ];
 const STITCH_TYPES = [ "SC", "HDC", "DC", "TR" ];
 
 // springs

@@ -362,15 +362,34 @@ function FindTensionWidthLength(hooksize, yarnweight) {
     // using hooksize and yarnweight, find tensionLength and tensionWidth
     let obj = {len: 1.0, wid: 1.0};
 
-    // bigger hook size will create more space between stitches -> increasing the gauge
-    // smaller hook size will create less space between stitches -> decreasing the gauge
+    // bigger hook size and greater yarn weight will increase size of gauge
+    // smaler hook size and lesser yarn weight will decrease size of gauge
+    // middle ground: if (hs == 6.0 && (ywIdx == 3 || ywIdx == 4)) {obj.len = 1.0; obj.wid = 1.0;}
 
-    // larger yarn weight will increase gauge
-    // smaller yarn weight will decrease gauge
+    let hs = Number(hooksize.split(" ")[0]);
+    // console.log("hook size: " + hs + " | type: " + typeof(hs));
 
-    // the middle ground for tension is with hook size 5 mm and yarn weight medium 
+    let ywIdx = YARN_WEIGHTS.indexOf(yarnweight);
+    // console.log("yarn weight: " + yarnweight + " | index: " + ywIdx);
 
+    if (isNaN(hs) || ywIdx === -1) {
+        return obj;
+    }
+    
+    let new_tension1 = ConvertValueToNewRange(hs, 2.0, 12.0, TENSION_MIN, TENSION_MAX);
+    let new_tension2 = ConvertValueToNewRange(ywIdx, 0, 7, TENSION_MIN, TENSION_MAX);
+    let new_tension = new_tension1 * new_tension2;
+    console.log(`new tension: ${new_tension}`);
 
+    obj.len = new_tension;
+    obj.wid = new_tension;
 
     return obj;
+}
+
+function ConvertValueToNewRange(old_value, old_min, old_max, new_min, new_max) {
+    let old_range = (old_max - old_min)  
+    let new_range = (new_max - new_min)  
+    let new_value = (((old_value - old_min) * new_range) / old_range) + new_min;
+    return new_value;
 }
