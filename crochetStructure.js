@@ -1080,14 +1080,14 @@ class CrochetStructure {
         if (VERBOSE) console.log("pos furthest Y:\n\t+ " + posFurthestYPos + "\n\t- " + posFurthestYNeg);
         if (VERBOSE) console.log("pos furthest Z:\n\t+ " + posFurthestZPos + "\n\t- " + posFurthestZNeg);
 
-        this.showVisualPoints = true; 
-        this.visualPoints = [];
-        this.visualPoints.push(posFurthestXPos); 
-        this.visualPoints.push(posFurthestXNeg); 
-        this.visualPoints.push(posFurthestYPos); 
-        this.visualPoints.push(posFurthestYNeg); 
-        this.visualPoints.push(posFurthestZPos); 
-        this.visualPoints.push(posFurthestZNeg); 
+        // this.showVisualPoints = true; 
+        // this.visualPoints = [];
+        // this.visualPoints.push(posFurthestXPos); 
+        // this.visualPoints.push(posFurthestXNeg); 
+        // this.visualPoints.push(posFurthestYPos); 
+        // this.visualPoints.push(posFurthestYNeg); 
+        // this.visualPoints.push(posFurthestZPos); 
+        // this.visualPoints.push(posFurthestZNeg); 
 
         let rs_x = (abs(highestX) + abs(lowestX)) / (stitchLengthMultiplier*2);
         let rs_y = (abs(highestY) + abs(lowestY)) / (stitchLengthMultiplier*2);
