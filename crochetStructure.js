@@ -160,29 +160,60 @@ class CrochetStructure {
             pop();
         }*/
 
-        // if (this.showVisualPoints) {
-        //     let counterVP = 0;
-        //     for (let i = 0; i < this.visualPoints.length; i++) {
-        //         let vp = this.visualPoints[i];
-        //         counterVP++;
+        if (this.showVisualPoints) {
+            for (let i = 0; i < this.visualPoints.length; i++) {
+                let vp = this.visualPoints[i];
 
-        //         noStroke();
-        //         if (counterVP % 2 == 0) fill(0);
-        //         else fill(255);
+                noStroke();
+                // alternating between black (0) and white (255)
+                if (i % 2 == 0) fill(0);
+                else fill(255);
+                // start at black and become more white
+                fill((255 / this.visualPoints.length) * (i + 1));
+                // first two are cyan, next two are magenta, next two are yellow
+                if (i < 2) fill(0, 255, 255);
+                else if (i < 4) fill(255, 0, 255, 255);
+                else if (i < 6) fill(255, 255, 0);
 
-        //         push();
-        //         rotateX(radians(ROTATION.x));
-        //         rotateY(radians(ROTATION.y));
-        //         rotateZ(radians(ROTATION.z));
+                push();
+                rotateX(radians(ROTATION.x));
+                rotateY(radians(ROTATION.y));
+                rotateZ(radians(ROTATION.z));
 
-        //         let zoomPos = p5.Vector.mult(vp, ZOOM);
-        //         translate(zoomPos.x, zoomPos.y, zoomPos.z);
-        //         scale(ZOOM, ZOOM, ZOOM);
+                let zoomPos = p5.Vector.mult(vp, ZOOM);
+                translate(zoomPos.x, zoomPos.y, zoomPos.z);
+                scale(ZOOM, ZOOM, ZOOM);
 
-        //         sphere(sphereRadius/2);
-        //         pop();
-        //     }
-        // }
+                sphere(sphereRadius/2);
+                pop();
+            }
+
+            // draw centroid as red
+            noStroke();
+            fill(255, 0, 0);
+            push();
+            rotateX(radians(ROTATION.x));
+            rotateY(radians(ROTATION.y));
+            rotateZ(radians(ROTATION.z));
+            let zoomPos = p5.Vector.mult(this.centroid, ZOOM);
+            translate(zoomPos.x, zoomPos.y, zoomPos.z);
+            scale(ZOOM, ZOOM, ZOOM);
+            sphere(sphereRadius/2);
+            pop();
+
+            // draw center (0,0,0) as green
+            noStroke();
+            fill(0, 255, 0);
+            push();
+            rotateX(radians(ROTATION.x));
+            rotateY(radians(ROTATION.y));
+            rotateZ(radians(ROTATION.z));
+            zoomPos = p5.Vector.mult(createVector(0,0,0), ZOOM);
+            translate(zoomPos.x, zoomPos.y, zoomPos.z);
+            scale(ZOOM, ZOOM, ZOOM);
+            sphere(sphereRadius/2);
+            pop();
+        }
     }
 
     // PressNodes() {
@@ -1016,59 +1047,51 @@ class CrochetStructure {
     
     GetApproximateRealSize() {
 
-        // get positions of stitches furthest away from centroid
-        let posFurthestXPos = createVector(this.centroid.x, 0, 0);
-        let posFurthestXNeg = createVector(this.centroid.x, 0, 0);
-        let posFurthestYPos = createVector(0, this.centroid.y, 0);
-        let posFurthestYNeg = createVector(0, this.centroid.y, 0);
-        let posFurthestZPos = createVector(0, 0, this.centroid.z);
-        let posFurthestZNeg = createVector(0, 0, this.centroid.z);
+        let highestX = 0;
+        let lowestX = 0;
+        let highestY = 0;
+        let lowestY = 0;
+        let highestZ = 0;
+        let lowestZ = 0;
 
-        let firstPos = this.firstStitch.GetPosition();
         // find the positions furthest away for the centroid for each plane
         for (let r = 0; r < this.rows.length; r++) {
             let row = this.rows[r];
             for (let s = 0; s < row.count; s++) {
                 let stitch = row.stitches[s];
                 let currPos = stitch.GetPosition();
-                let dist = currPos.dist(this.centroid);
-                
-                // check x
-                let tempPosX = createVector(currPos.x, 0, 0);
-                if (tempPosX.x >= this.centroid.x && currPos.dist(posFurthestXPos) > this.centroid.dist(posFurthestXPos)) {
-                    posFurthestXPos = tempPosX;
 
-                } else if (tempPosX.x < this.centroid.x && currPos.dist(posFurthestXNeg) > this.centroid.dist(posFurthestXNeg)) {
-                    posFurthestXNeg = tempPosX;
-                }
-
-                // check y
-                let tempPosY = createVector(0, currPos.y, 0);
-                if (tempPosY.y >= this.centroid.y && currPos.dist(posFurthestYPos) > this.centroid.dist(posFurthestYPos)) {
-                    posFurthestYPos = tempPosY;
-
-                } else if (tempPosY.y < this.centroid.y && currPos.dist(posFurthestYNeg) > this.centroid.dist(posFurthestYNeg)) {
-                    posFurthestYNeg = tempPosY;
-                }
-
-                // check z
-                let tempPosZ = createVector(0, 0, currPos.z);
-                if (tempPosZ.z >= this.centroid.z && currPos.dist(posFurthestZPos) > this.centroid.dist(posFurthestZPos)) {
-                    posFurthestZPos = tempPosZ;
-
-                } else if (tempPosZ.z < this.centroid.z && currPos.dist(posFurthestZNeg) > this.centroid.dist(posFurthestZNeg)) {
-                    posFurthestZNeg = tempPosZ;
-                }
+                if (currPos.x >= highestX) highestX = currPos.x;
+                if (currPos.x < lowestX) lowestX = currPos.x;
+                if (currPos.y >= highestY) highestY = currPos.y;
+                if (currPos.y < lowestY) lowestY = currPos.y;
+                if (currPos.z >= highestZ) highestZ = currPos.z;
+                if (currPos.z < lowestZ) lowestZ = currPos.z;
             }
         }
+        let posFurthestXPos = createVector(highestX, 0, 0);
+        let posFurthestXNeg = createVector(lowestX, 0, 0);
+        let posFurthestYPos = createVector(0, highestY, 0);
+        let posFurthestYNeg = createVector(0, lowestY, 0);
+        let posFurthestZPos = createVector(0, 0, highestZ);
+        let posFurthestZNeg = createVector(0, 0, lowestZ);
 
         if (VERBOSE) console.log("pos furthest X:\n\t+ " + posFurthestXPos + "\n\t- " + posFurthestXNeg);
         if (VERBOSE) console.log("pos furthest Y:\n\t+ " + posFurthestYPos + "\n\t- " + posFurthestYNeg);
         if (VERBOSE) console.log("pos furthest Z:\n\t+ " + posFurthestZPos + "\n\t- " + posFurthestZNeg);
 
-        let rs_x = posFurthestXPos.dist(posFurthestXNeg) / stitchLengthMultiplier;
-        let rs_y = posFurthestYPos.dist(posFurthestYNeg) / stitchLengthMultiplier;
-        let rs_z = posFurthestZPos.dist(posFurthestZNeg) / stitchLengthMultiplier;
+        this.showVisualPoints = true; 
+        this.visualPoints = [];
+        this.visualPoints.push(posFurthestXPos); 
+        this.visualPoints.push(posFurthestXNeg); 
+        this.visualPoints.push(posFurthestYPos); 
+        this.visualPoints.push(posFurthestYNeg); 
+        this.visualPoints.push(posFurthestZPos); 
+        this.visualPoints.push(posFurthestZNeg); 
+
+        let rs_x = (abs(highestX) + abs(lowestX)) / (stitchLengthMultiplier*2);
+        let rs_y = (abs(highestY) + abs(lowestY)) / (stitchLengthMultiplier*2);
+        let rs_z = (abs(highestZ) + abs(lowestZ)) / (stitchLengthMultiplier*2);
 
         // make sure that numbers aren't negative or become 0.0
         let minVal = 0.1;
