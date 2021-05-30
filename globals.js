@@ -16,11 +16,11 @@ let cnv;
 // gui
 let gui;
 
-// 'true' uses the tests from testcased.pde, set to false when a structure is generated via gui
+// 'true' uses the tests from testcased.pde, set to false when a model is generated via gui
 let useTests;
 
 let generatedReady;
-let generatedCrochetStructure;
+let generatedCrochetModel;
 
 let springColor;
 let springNonColor;
@@ -41,7 +41,7 @@ let Z_PRESSED;
 let ARROW_KEY_PRESSED;
 
 // for tests
-let structures;
+let models;
 let activeTestIdx;
 
 function InitializeGlobals() {
@@ -66,6 +66,6 @@ function InitializeGlobals() {
     Z_PRESSED = false;
     ARROW_KEY_PRESSED = false;
 
-    structures = [];
+    models = [];
     activeTestIdx = 0;
 }

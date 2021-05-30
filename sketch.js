@@ -42,7 +42,7 @@ function draw() {
         displayTest();
     }
     else if (generatedReady && !recordingPDF) {
-        generatedCrochetStructure.Draw();
+        generatedCrochetModel.Draw();
     }
 
     gui.update();
@@ -118,13 +118,13 @@ function keyPressed() {
     }
 
     if (key == 'p' || key == 'P') {
-        // create a PDF of the pattern of the currently active crochetStructure
+        // create a PDF of the pattern of the currently active crochetModel
         SavePatternPDFAndImageFile();
     }
 
     if (key == 'o' || key == 'O') {
-        // activate springs for currently active structure
-        UpdateSpringsOfActiveStructure();
+        // activate springs for currently active model
+        UpdateSpringsOfActiveModel();
     }
 
     if (key == 'h' || key == 'H') {

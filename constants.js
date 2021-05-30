@@ -21,7 +21,7 @@ const useVertexStitchColors = true;
 
 const MAX_TESTS = 13;
 
-// in CrochetStructure, if true: fix positions using the center most stitch; if false: use the ontoStitch instead
+// in CrochetModel, if true: fix positions using the center most stitch; if false: use the ontoStitch instead
 // let useOriginStitchForCentering = true;
 // in Row, if true: create an edge between the first stitch in a row and the last stitch in the previous row
 const connectStartEndStitches = true;

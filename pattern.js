@@ -1,13 +1,13 @@
 
 class Pattern {
-    // CrochetStructure crochetStructure;
+    // CrochetModel crochetModel;
     // String patternStr;
 
     // boolean condenseStitches = true;
     // boolean checkForIncreases = true;
 
     constructor(cs) {
-        this.crochetStructure = cs;
+        this.crochetModel = cs;
         this.patternStr = "Pattern:\n";
         let rowCounter = 0;
         for (let r = 0; r < cs.rows.length; r++) {

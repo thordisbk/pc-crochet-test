@@ -1,5 +1,5 @@
 
-// for testing crochet structures and stitches
+// for testing crochet models and stitches
 
 function createTests() {
     let circs = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
@@ -8,14 +8,14 @@ function createTests() {
     // let active =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]; // only circular active
     for (let i = 0; i < MAX_TESTS; i++) {
         let type = (circs[i] == 1) ? CrochetType.CIRCULAR : CrochetType.BACKFORTH;
-        let crochetStructure = new CrochetStructure(type, 5.5, YarnWeight.MEDIUM);
-        structures.push(crochetStructure);
+        let crochetModel = new CrochetModel(type, 5.5, YarnWeight.MEDIUM);
+        models.push(crochetModel);
 
         if (active[i] == 0) 
             continue;
-        crochetStructure.SetupTest(i);
-        let pattern = new Pattern(crochetStructure);
-        if (VERBOSE || DEBUG) console.log("test " + i + ": " + crochetStructure.csName + "\n" + pattern.patternStr);
+        crochetModel.SetupTest(i);
+        let pattern = new Pattern(crochetModel);
+        if (VERBOSE || DEBUG) console.log("test " + i + ": " + crochetModel.csName + "\n" + pattern.patternStr);
     }
 }
 
@@ -28,68 +28,68 @@ function NextTest() {
 
 function ResetActiveTest() {
     // destroy the currently active test and recreate is
-    let type = structures[activeTestIdx].crochetType;
-    // structures[activeTestIdx] = null;
-    structures[activeTestIdx] = new CrochetStructure(type, 5.5, YarnWeight.MEDIUM);
-    structures[activeTestIdx].SetupTest(activeTestIdx);
+    let type = models[activeTestIdx].crochetType;
+    // models[activeTestIdx] = null;
+    models[activeTestIdx] = new CrochetModel(type, 5.5, YarnWeight.MEDIUM);
+    models[activeTestIdx].SetupTest(activeTestIdx);
 }
 
 function GetActiveTestName() {
-    return structures[activeTestIdx].csName;
+    return models[activeTestIdx].csName;
 }
 
 function GetActiveTestStitchCount() {
-    return structures[activeTestIdx].totalStitches;
+    return models[activeTestIdx].totalStitches;
 }
 
 function GetActiveTestRowCount() {
-    return structures[activeTestIdx].rows.length;
+    return models[activeTestIdx].rows.length;
 }
 
 function GetActiveTestTensionWidth() {
-    return structures[activeTestIdx].tensionWidth;
+    return models[activeTestIdx].tensionWidth;
 }
 
 function GetActiveTestTensionLength() {
-    return structures[activeTestIdx].tensionLength;
+    return models[activeTestIdx].tensionLength;
 }
 
 function GetActiveTestPattern() {
-    let pattern = new Pattern(structures[activeTestIdx]);
+    let pattern = new Pattern(models[activeTestIdx]);
     return pattern.patternStr;
 }
 
 function GetActiveTestApproximateRealSize() {
-    return structures[activeTestIdx].GetApproximateRealSize();
+    return models[activeTestIdx].GetApproximateRealSize();
 }
 
 function GetActiveTestGaugeInfo() {
-    return structures[activeTestIdx].GetGaugeInfo();
+    return models[activeTestIdx].GetGaugeInfo();
 }
 
 function ActiveTestUpdatePreviousStitches() {
-    let a = structures[activeTestIdx].rows.length-1;
-    let b = structures[activeTestIdx].rows[a].count-1;
-    structures[activeTestIdx].UpdatePreviousStitches(a, b, 1000, true);
+    let a = models[activeTestIdx].rows.length-1;
+    let b = models[activeTestIdx].rows[a].count-1;
+    models[activeTestIdx].UpdatePreviousStitches(a, b, 1000, true);
 }
 
 function ToggleSpringUpdates(on) {
-    for (let s = 0; s < structures[activeTestIdx].allSprings.length; s++) {
-        let spring = structures[activeTestIdx].allSprings[s];
+    for (let s = 0; s < models[activeTestIdx].allSprings.length; s++) {
+        let spring = models[activeTestIdx].allSprings[s];
         spring.updatePositions = on;
     }
 }
 
 function displayTest() {
-    structures[activeTestIdx].Draw();
+    models[activeTestIdx].Draw();
 }
 
 // function handleMouseActionTest(release) {
 //     if (!release) {
-//         structures[activeTestIdx].PressNodes();
+//         models[activeTestIdx].PressNodes();
 //     }
 //     else {
-//         structures[activeTestIdx].ReleaseNodes();
+//         models[activeTestIdx].ReleaseNodes();
 //     }
 // }
 

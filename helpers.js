@@ -87,12 +87,12 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
         approxRealSize = GetActiveTestApproximateRealSize();
         gaugeInfo = GetActiveTestGaugeInfo();
     } else if (generatedReady) {
-        let pattern = new Pattern(generatedCrochetStructure);
+        let pattern = new Pattern(generatedCrochetModel);
         patternString = pattern.patternStr;
-        approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
-        gaugeInfo = generatedCrochetStructure.GetGaugeInfo();
+        approxRealSize = generatedCrochetModel.GetApproximateRealSize();
+        gaugeInfo = generatedCrochetModel.GetGaugeInfo();
     } else {
-        console.error("SavePatternPDFAndImageFile(): no crochet structure ready");
+        console.error("SavePatternPDFAndImageFile(): no crochet model ready");
         return;
     }
     let formattedPattern = FormatPatternString(patternString);
@@ -100,7 +100,7 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
     let realSize = "Approximate real size of crocheted object: " + approxRealSize;
     let creatorStr = "Created using Crochet Patthern Generator by ÞBK (pokr@itu.dk)";
 
-    // save an image of the crochet structure
+    // save an image of the crochet model
     save(cnv, fileName + "_image.png");
 
     // save a PDF with the pattern
@@ -138,12 +138,12 @@ function SavePatternPDFAndImageFile(fileName = "generated_crochet") {
     loop();
 }
 
-function UpdateSpringsOfActiveStructure() {
-    // when the generated structure is ready, activate that one, else active springs of currently active test
+function UpdateSpringsOfActiveModel() {
+    // when the generated model is ready, activate that one, else active springs of currently active test
     let springsAreActive = false;
     if (!useTests && generatedReady) {
-        generatedCrochetStructure.UpdatePreviousStitches(generatedCrochetStructure.rows.length-1, 
-            generatedCrochetStructure.rows[generatedCrochetStructure.rows.length-1].count-1, 1000, true);
+        generatedCrochetModel.UpdatePreviousStitches(generatedCrochetModel.rows.length-1, 
+            generatedCrochetModel.rows[generatedCrochetModel.rows.length-1].count-1, 1000, true);
     } else if (useTests) {
         ActiveTestUpdatePreviousStitches();
     }

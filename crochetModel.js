@@ -1,5 +1,5 @@
 
-class CrochetStructure {
+class CrochetModel {
     // let crochetType;
 
     // let hookSize;     // metric size of the hook, in mm
@@ -33,15 +33,15 @@ class CrochetStructure {
 
     constructor(val1, val2, val3) {
         if (!isNaN(val2) && !isNaN(val3)) {
-            this.CrochetStructure2(val1, val2, val3);
+            this.CrochetModel2(val1, val2, val3);
         } else {
-            this.CrochetStructure1(val1, val2, val3);
+            this.CrochetModel1(val1, val2, val3);
         }
     }
 
-    CrochetStructure1(ct, hs, yw) {
+    CrochetModel1(ct, hs, yw) {
         // hs and yw are consts
-        console.log("Make crochet structure using standard hook and yarn");
+        console.log("Make crochet model using standard hook and yarn");
         this.crochetType = ct;
         this.hookSize = hs;
         this.yarnWeight = yw;
@@ -59,9 +59,9 @@ class CrochetStructure {
         this.InitializeVars();
     }
 
-    CrochetStructure2(ct, wid10x10, len10x10) {
+    CrochetModel2(ct, wid10x10, len10x10) {
         // wid10x10 and len10x10 are given in cm as floats
-        console.log("Make crochet structure using measure gauge");
+        console.log("Make crochet model using measure gauge");
         this.crochetType = ct;
         this.hookSize = 0.0;
         this.yarnWeight = null;
@@ -248,11 +248,11 @@ class CrochetStructure {
         // minRows and maxRows specify a maximum and minmum number of rows, with the lowest being 0
         // minStitches and maxStitches specify a maximum and minmum number of stitches in a rows, with the lowest being 1
         // numStitchesFirstRow specify the number of stitches to use for the first row
-        // canBeCirc and canBeBAF define whether the structure can be circular of back&forth, if both true/false then it's random
+        // canBeCirc and canBeBAF define whether the model can be circular of back&forth, if both true/false then it's random
         // allSameStitch specifies whether to only use CH and SC (true), or any type of stitch (false)
         // stitchType is used if allSameStitch == true (else it is .NONE), this specifies which stitch type + CH can be used
 
-        this.csName = "generated crochet structure";
+        this.csName = "generated crochet model";
 
         let enableDec = false;  // TODO
 
@@ -594,7 +594,7 @@ class CrochetStructure {
                 }
                 stitch.SetPosition(pos);
 
-                // update springs of structure (up to and including current stitch) while still finding a relaxed state
+                // update springs of model (up to and including current stitch) while still finding a relaxed state
                 this.UpdatePreviousStitches(r, s, 1000, false);
 
                 // if (stitch.ontoStitch != null) stitch.ontoStitch.RecalculateVectors();
@@ -641,7 +641,7 @@ class CrochetStructure {
     }
 
     FixStitchPositionsCircular() {
-        if (VERBOSE) console.log("CrochetStructure::FixStitchPositionsCircular");
+        if (VERBOSE) console.log("CrochetModel::FixStitchPositionsCircular");
 
         // first distribute the stitches in each row in a circular fashion
         // then normalize all stitches, row by row
@@ -832,7 +832,7 @@ class CrochetStructure {
     }
 
     FixStitchPositionsBackForth() {
-        if (VERBOSE) console.log("CrochetStructure::FixStitchPositionsBackForth");
+        if (VERBOSE) console.log("CrochetModel::FixStitchPositionsBackForth");
 
         for (let i = 0; i < this.rows.length; i++) {
             // console.log("Row");
@@ -876,7 +876,7 @@ class CrochetStructure {
     }
 
     ApplyTensionToCircularRows() {
-        if (VERBOSE) console.log("CrochetStructure::ApplyTensionToCircularRows");
+        if (VERBOSE) console.log("CrochetModel::ApplyTensionToCircularRows");
         for (let r = 0; r < this.rows.length; r++) {
             let row = this.rows[r];
             if (row.AllStitchesAreTheSameType(StitchTypes.CH)) {

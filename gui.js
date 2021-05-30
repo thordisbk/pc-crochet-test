@@ -122,7 +122,7 @@ class GUI {
     }
 
     createGUIsprings() {
-        let gui = createGui('Adjust structure').setPosition(width - 210, 485);
+        let gui = createGui('Adjust model').setPosition(width - 210, 485);
         gui.addButton("Activate springs", function() {
             ActivateSpringsButton();
         });
@@ -167,9 +167,9 @@ function ActivateSpringsButton() {
         return;
     }
 
-    UpdateSpringsOfActiveStructure();
+    UpdateSpringsOfActiveModel();
     // find new approximate size
-    let approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    let approxRealSize = generatedCrochetModel.GetApproximateRealSize();
     approximate_real_size = approxRealSize;
     gui_pattern.prototype.setValue('approximate_real_size', approxRealSize);
 }
@@ -178,7 +178,7 @@ function generateUsingInput() {
     noLoop();
 
     if (DEBUG) {
-        console.log("generate crochet structure"
+        console.log("generate crochet model"
          + "\nuse_measure_gauge = " + use_measure_gauge + " | use_standard_gauge = " + use_standard_gauge
          + "\ncrochet: " + crochet_type_to_make
          + "\ninput_width_rows_cm: " + input_width_rows_cm
@@ -194,24 +194,24 @@ function generateUsingInput() {
     }
 
     if (use_measure_gauge === true ) {
-        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, input_width_rows_cm, input_length_rows_cm);
+        generatedCrochetModel = new CrochetModel(crochet_type_to_make, input_width_rows_cm, input_length_rows_cm);
     }
     else if (use_standard_gauge === true) {
-        generatedCrochetStructure = new CrochetStructure(crochet_type_to_make, hook_size, yarn_weight);
+        generatedCrochetModel = new CrochetModel(crochet_type_to_make, hook_size, yarn_weight);
     }
     let stitch_type = GetStitchTypesKeyByValue(stitch_type_to_use);
-    let ok = generatedCrochetStructure.GenerateRestrained(min_number_of_rows, max_number_of_rows, 
+    let ok = generatedCrochetModel.GenerateRestrained(min_number_of_rows, max_number_of_rows, 
         min_stitches_in_a_row, max_stitches_in_a_row, stitches_in_first_row, true, false, true, stitch_type);
 
     if (ok === false) {
-        console.error("generateUsingInput() something went wrong while generating structure");
+        console.error("generateUsingInput() something went wrong while generating model");
         return;
     }
 
     generatedReady = true;
     useTests = false;
 
-    let approxRealSize = generatedCrochetStructure.GetApproximateRealSize();
+    let approxRealSize = generatedCrochetModel.GetApproximateRealSize();
     approximate_real_size = approxRealSize;
     gui_pattern.prototype.setValue('approximate_real_size', approxRealSize);
 

@@ -44,13 +44,13 @@ class Stitch {
     }
 
     Stitch0() {
-        // call for first stitch in a crochet structure
+        // call for first stitch in a crochet model
         // Init(StitchTypes.CH, StitchDescription.REGULAR, createVector(WIDTH/2, HEIGHT/2, 0), null, null);
         this.Init(StitchTypes.SLKN, StitchDescription.START, createVector(0, 0, 0), null, null);
     }
     
     Stitch1(type) {
-        // call for first stitch in a crochet structure (slip knot or magic ring)
+        // call for first stitch in a crochet model (slip knot or magic ring)
         if (type != StitchTypes.SLKN && type != StitchTypes.MR) {
             console.warn("Stitch(): needs to be provided a SLKN or MR");
             return;
@@ -59,13 +59,13 @@ class Stitch {
     }
 
     Stitch4(type, description, prev, onto) {
-        // call for any stitch in a crochet structure, except the initial one
+        // call for any stitch in a crochet model, except the initial one
         let pos = createVector(0, 0, 0);
         this.Init(type, description, pos, prev, onto);
     }
 
     Stitch3(type, prev, onto) {
-        // call for any DEC stitch in a crochet structure
+        // call for any DEC stitch in a crochet model
         if (onto.length < 2) {
             console.warn("Stitch(): needs to be provided at least two ontoStitches");
             return;
@@ -99,7 +99,7 @@ class Stitch {
         this.upVector = createVector(0, 0, 1);
         this.forwardVector = createVector(0, 1, 0);
 
-        // call for any stitch in a crohet structure, except the initial one
+        // call for any stitch in a crochet model, except the initial one
         this.stitchType = type;
         this.stitchDescription = description;
         this.prevStitch = prev;
